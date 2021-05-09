@@ -8,11 +8,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class Flag implements Listener{
 
 	Block block;
 	Block spawnBlock;
+	Material bannerType;
+	ItemStack item;
 
 	public Flag(MinecraftCTF plugin, Location initLoc, Material bannerType, int team){
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -24,6 +28,15 @@ public class Flag implements Listener{
 		EndPortalFrame blockData = (EndPortalFrame) Material.END_PORTAL_FRAME.createBlockData();
 		blockData.setEye(true);
 		this.spawnBlock.setBlockData(blockData);
+
+		this.bannerType = bannerType;
+
+		//Make the flag item
+		ItemStack flagItem = new ItemStack(this.bannerType);
+		ItemMeta meta = flagItem.getItemMeta();
+		meta.setDisplayName("Team " + "UNDEFINED" + " Flag");
+		flagItem.setItemMeta(meta);
+		this.item = flagItem;
 	}
 
 	public Location getLocation(){
