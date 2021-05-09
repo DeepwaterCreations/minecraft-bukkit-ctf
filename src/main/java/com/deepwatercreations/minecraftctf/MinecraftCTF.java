@@ -7,18 +7,24 @@ import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.deepwatercreations.minecraftctf.Zone;
 
-public final class MinecraftCTF extends JavaPlugin{
+public final class MinecraftCTF extends JavaPlugin implements Listener{
 
 	public int currentParticleIdx = 0;
+	public Block flagA = null;
+	public Block flagB = null;
 
 	@Override
 	public void onEnable(){
-
+		getServer().getPluginManager().registerEvents(this, this);
 	}
 
 	@Override
@@ -33,18 +39,18 @@ public final class MinecraftCTF extends JavaPlugin{
 				Player player = (Player) sender;
 				Location playerLoc = player.getLocation();
 
-				Location teamABaseLoc = playerLoc.clone().add(3, 0, 0);
-				Block flagA = teamABaseLoc.getBlock();
+				Location teamABaseLoc = playerLoc.clone().add(10, 0, 0);
+				flagA = teamABaseLoc.getBlock();
 				flagA.setType(Material.BLUE_BANNER);
 
-				Location teamBBaseLoc = playerLoc.clone().add(-3, 0, 0);
-				Block flagB = teamBBaseLoc.getBlock();
+				Location teamBBaseLoc = playerLoc.clone().add(-10, 0, 0);
+				flagB = teamBBaseLoc.getBlock();
 				flagB.setType(Material.RED_BANNER);
 
 				int teamZoneRadius = 3;
 
-				Location boundaryCenterLoc = player.getLocation();
-				new Zone(player.getWorld(), boundaryCenterLoc, teamZoneRadius).runTaskTimer(this, 0, 1);
+				new Zone(player.getWorld(), teamABaseLoc, teamZoneRadius).runTaskTimer(this, 0, 1);
+				new Zone(player.getWorld(), teamBBaseLoc, teamZoneRadius).runTaskTimer(this, 0, 1);
 			}
 			return true;
 		} else if(cmd.getName().equalsIgnoreCase("ne")){
@@ -62,4 +68,21 @@ public final class MinecraftCTF extends JavaPlugin{
 		//If the command isn't valid, return false so that help is displayed
 		return false;
 	}
+
+	@EventHandler
+	public void onPlayerMove(PlayerMoveEvent event){
+		//Check if they've carried the enemy flag to their own flag
+		Player player = event.getPlayer();
+		Location pLoc = player.getLocation();
+		if(flagA != null){
+			Location aLoc = flagA.getLocation();
+			if(pLoc.getBlockX() == aLoc.getBlockX() &&
+			   pLoc.getBlockY() == aLoc.getBlockY() &&
+			   pLoc.getBlockZ() == aLoc.getBlockZ() &&
+			   player.getInventory().contains(new ItemStack(Material.RED_BANNER))){
+				player.sendRawMessage("You probably scored maybe!");
+			}
+		}
+	}
+
 }
