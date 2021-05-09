@@ -40,13 +40,18 @@ public class Flag implements Listener{
 	}
 
 	public Location getLocation(){
-		return this.block.getLocation();
+		if(this.block != null){
+			return this.block.getLocation();
+		} else {
+			return null;
+		}
 	}
 
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event){
 		Block broken = event.getBlock();
-		if(broken.getX() == this.block.getX() &&
+		if(this.getLocation() != null &&
+		   broken.getX() == this.block.getX() &&
 		   broken.getY() == this.block.getY() &&
 		   broken.getZ() == this.block.getZ()){
 			event.getPlayer().sendMessage("You broke a flag");

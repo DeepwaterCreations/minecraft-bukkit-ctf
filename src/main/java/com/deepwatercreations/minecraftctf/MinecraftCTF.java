@@ -75,7 +75,7 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 		//Check if they've carried the enemy flag to their own flag
 		Player player = event.getPlayer();
 		Location pLoc = player.getLocation();
-		if(flagA != null){
+		if(flagA != null && flagA.getLocation() != null){
 			Location aLoc = flagA.getLocation(); //TODO: Currently a Block, not reset when flag is moved
 			if(pLoc.getBlockX() == aLoc.getBlockX() &&
 			   pLoc.getBlockY() == aLoc.getBlockY() &&
