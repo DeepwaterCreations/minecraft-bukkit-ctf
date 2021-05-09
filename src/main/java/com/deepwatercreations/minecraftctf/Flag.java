@@ -83,5 +83,10 @@ public class Flag implements Listener{
 		}
 	}
 
+	//TODO:
+	//Break portal frame block? How do I inform the players this is possible?
+	//Check if flag is destroyed from: Despawn, BlockBurnedEvent(?), maybe just
+	//	periodically.
+	//Different placement and pickup behavior by team? Or, zone-aware?
 }
 

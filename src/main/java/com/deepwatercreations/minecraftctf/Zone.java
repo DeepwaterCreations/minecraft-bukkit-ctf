@@ -32,4 +32,8 @@ public class Zone extends BukkitRunnable{
 		}
 
 	}
+
+	//TODO: isInBounds()
+	//TODO: Draw only the outline
+	//TODO: Team bounds vs play area bounds
 }

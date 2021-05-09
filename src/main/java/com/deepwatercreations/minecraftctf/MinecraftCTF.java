@@ -97,4 +97,8 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 	//PlayerRespawnEvent (to spawn at team base or prison)
 	//PlayerToggleSneakEvent (for flag visibility complexity?)	
 	//PlayerToggleSprintEvent ("")
+	
+	//TODO:
+	//Recall/b command?
+	//Turn off advancements (maybe just hide them from the other team?)
 }
