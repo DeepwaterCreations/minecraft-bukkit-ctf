@@ -44,6 +44,8 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				flagSpawnA.setType(Material.END_PORTAL_FRAME);
 				flagA = teamABaseLoc.clone().add(0, 1, 0).getBlock();
 				flagA.setType(Material.BLUE_BANNER);
+				//TODO: Pick an appropriate height to spawn both flags at given the ground levels
+				//	at the two locations.
 
 				Location teamBBaseLoc = playerLoc.clone().add(-10, 0, 0);
 				Block flagSpawnB = teamBBaseLoc.getBlock();
@@ -79,11 +81,11 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 		Player player = event.getPlayer();
 		Location pLoc = player.getLocation();
 		if(flagA != null){
-			Location aLoc = flagA.getLocation();
+			Location aLoc = flagA.getLocation(); //TODO: Currently a Block, not reset when flag is moved
 			if(pLoc.getBlockX() == aLoc.getBlockX() &&
 			   pLoc.getBlockY() == aLoc.getBlockY() &&
 			   pLoc.getBlockZ() == aLoc.getBlockZ() &&
-			   player.getInventory().contains(new ItemStack(Material.RED_BANNER))){
+			   player.getInventory().contains(new ItemStack(Material.RED_BANNER))){ //TODO: Make sure it's the right flag
 				player.sendRawMessage("You probably scored maybe!");
 			}
 		}
