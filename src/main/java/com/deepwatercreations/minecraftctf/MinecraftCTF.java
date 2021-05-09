@@ -15,12 +15,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.deepwatercreations.minecraftctf.Zone;
+import com.deepwatercreations.minecraftctf.Flag;
 
 public final class MinecraftCTF extends JavaPlugin implements Listener{
 
 	public int currentParticleIdx = 0;
-	public Block flagA = null;
-	public Block flagB = null;
+	public Flag flagA = null;
+	public Flag flagB = null;
 
 	@Override
 	public void onEnable(){
@@ -40,18 +41,12 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				Location playerLoc = player.getLocation();
 
 				Location teamABaseLoc = playerLoc.clone().add(10, 0, 0);
-				Block flagSpawnA = teamABaseLoc.getBlock();
-				flagSpawnA.setType(Material.END_PORTAL_FRAME);
-				flagA = teamABaseLoc.clone().add(0, 1, 0).getBlock();
-				flagA.setType(Material.BLUE_BANNER);
+				flagA = new Flag(this, teamABaseLoc, Material.BLUE_BANNER, 0);
 				//TODO: Pick an appropriate height to spawn both flags at given the ground levels
 				//	at the two locations.
 
 				Location teamBBaseLoc = playerLoc.clone().add(-10, 0, 0);
-				Block flagSpawnB = teamBBaseLoc.getBlock();
-				flagSpawnB.setType(Material.END_PORTAL_FRAME);
-				flagB = teamBBaseLoc.clone().add(0, 1, 0).getBlock();
-				flagB.setType(Material.RED_BANNER);
+				flagB = new Flag(this, teamBBaseLoc, Material.RED_BANNER, 1);
 
 				int teamZoneRadius = 3;
 
