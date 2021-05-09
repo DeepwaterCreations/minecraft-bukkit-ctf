@@ -85,4 +85,15 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 		}
 	}
 
+	//EVENTS TO CATCH:
+	//ItemDespawnEvent
+	//EntityDropItemEvent
+	//EntityPickupItemEvent
+	//EntityPlaceEvent
+	//AsyncPlayerPreLoginEvent (to restore team identity and so forth?)
+	//PlayerDropItemEvent
+	//PlayerQuitEvent
+	//PlayerRespawnEvent (to spawn at team base or prison)
+	//PlayerToggleSneakEvent (for flag visibility complexity?)	
+	//PlayerToggleSprintEvent ("")
 }
