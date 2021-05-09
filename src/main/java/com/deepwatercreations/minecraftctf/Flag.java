@@ -4,7 +4,10 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.EndPortalFrame;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 
 public class Flag implements Listener{
 
@@ -26,5 +29,16 @@ public class Flag implements Listener{
 	public Location getLocation(){
 		return this.block.getLocation();
 	}
+
+	@EventHandler
+	public void onBlockBreak(BlockBreakEvent event){
+		Block broken = event.getBlock();
+		if(broken.getX() == this.block.getX() &&
+		   broken.getY() == this.block.getY() &&
+		   broken.getZ() == this.block.getZ()){
+			event.getPlayer().sendMessage("You broke a flag");
+		}
+	}
+
 }
 
