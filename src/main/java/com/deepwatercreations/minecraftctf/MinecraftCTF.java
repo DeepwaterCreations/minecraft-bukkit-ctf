@@ -40,11 +40,15 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				Location playerLoc = player.getLocation();
 
 				Location teamABaseLoc = playerLoc.clone().add(10, 0, 0);
-				flagA = teamABaseLoc.getBlock();
+				Block flagSpawnA = teamABaseLoc.getBlock();
+				flagSpawnA.setType(Material.END_PORTAL_FRAME);
+				flagA = teamABaseLoc.clone().add(0, 1, 0).getBlock();
 				flagA.setType(Material.BLUE_BANNER);
 
 				Location teamBBaseLoc = playerLoc.clone().add(-10, 0, 0);
-				flagB = teamBBaseLoc.getBlock();
+				Block flagSpawnB = teamBBaseLoc.getBlock();
+				flagSpawnB.setType(Material.END_PORTAL_FRAME);
+				flagB = teamBBaseLoc.clone().add(0, 1, 0).getBlock();
 				flagB.setType(Material.RED_BANNER);
 
 				int teamZoneRadius = 3;
