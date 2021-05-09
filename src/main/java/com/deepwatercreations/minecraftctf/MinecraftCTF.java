@@ -76,11 +76,11 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 		Player player = event.getPlayer();
 		Location pLoc = player.getLocation();
 		if(flagA != null && flagA.getLocation() != null){
-			Location aLoc = flagA.getLocation(); //TODO: Currently a Block, not reset when flag is moved
+			Location aLoc = flagA.getLocation();
 			if(pLoc.getBlockX() == aLoc.getBlockX() &&
 			   pLoc.getBlockY() == aLoc.getBlockY() &&
 			   pLoc.getBlockZ() == aLoc.getBlockZ() &&
-			   player.getInventory().contains(new ItemStack(Material.RED_BANNER))){ //TODO: Make sure it's the right flag
+			   player.getInventory().contains(flagB.item)){
 				player.sendRawMessage("You probably scored maybe!");
 			}
 		}

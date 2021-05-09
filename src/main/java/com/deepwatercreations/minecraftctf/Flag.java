@@ -2,8 +2,10 @@ package com.deepwatercreations.minecraftctf;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.EndPortalFrame;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -55,6 +57,29 @@ public class Flag implements Listener{
 		   broken.getY() == this.block.getY() &&
 		   broken.getZ() == this.block.getZ()){
 			event.getPlayer().sendMessage("You broke a flag");
+			
+			//Stop this event from dropping a natural flag
+			event.setDropItems(false);
+
+			//Drop the custom flag right onto the player's location to make it
+			//a little harder to build stuff that makes it impossible to pick
+			//up the flag: //TODO: don't do this outside of team zones?
+			Player player = event.getPlayer();
+			World world = player.getWorld();
+			world.dropItem(player.getLocation(), this.item);
+			
+			//Set the block to null, since the flag's not there anymore:
+			this.block = null;
+		}
+	}
+
+	@EventHandler
+	public void onBlockPlace(BlockPlaceEvent event){
+		if(event.getItemInHand().equals(this.item)){
+			event.getPlayer().sendMessage("You placed a flag");
+
+			//Set the new block location
+			this.block = event.getBlockPlaced();
 		}
 	}
 
