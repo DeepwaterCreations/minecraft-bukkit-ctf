@@ -1,5 +1,10 @@
 package com.deepwatercreations.minecraftctf;
 
+import de.tr7zw.changeme.nbtapi.NBTItem;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -12,15 +17,22 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
+
+import com.deepwatercreations.minecraftctf.MinecraftCTF;
+import com.deepwatercreations.minecraftctf.Team;
 
 public class Flag implements Listener{
+
+	public static List<Flag> flagList = new ArrayList<Flag>();
 
 	Block block;
 	Block spawnBlock;
 	Material bannerType;
 	ItemStack item;
+	Team team;
 
-	public Flag(MinecraftCTF plugin, Location initLoc, Material bannerType, int team){
+	public Flag(MinecraftCTF plugin, Location initLoc, Material bannerType, Team team){
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		this.block = initLoc.getBlock();
 		this.block.setType(bannerType);
@@ -38,7 +50,18 @@ public class Flag implements Listener{
 		ItemMeta meta = flagItem.getItemMeta();
 		meta.setDisplayName("Team " + "UNDEFINED" + " Flag");
 		flagItem.setItemMeta(meta);
+		//We need to use an external library to set NBT data
+		//or else two flags with the same name will count as the same flag.
+		NBTItem nbtitem = new NBTItem(flagItem);
+		nbtitem.setString(MinecraftCTF.TEAM_KEY, team.toString()); //TODO: I'd really rather have this be an int
+									   //TODO: Make sure there aren't problems caused by
+									   //	   using this same key for a non-flag
+		flagItem = nbtitem.getItem();
+
 		this.item = flagItem;
+		this.team = team;
+
+		Flag.flagList.add(this);
 	}
 
 	public Location getLocation(){
