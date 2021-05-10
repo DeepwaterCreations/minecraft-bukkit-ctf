@@ -74,6 +74,7 @@ public class Flag implements Listener{
 
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event){
+		//TODO: Make this work for if the block the banner is attached to gets broken also
 		Block broken = event.getBlock();
 		if(this.getLocation() != null &&
 		   broken.getX() == this.block.getX() &&

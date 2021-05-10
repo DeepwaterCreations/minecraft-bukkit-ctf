@@ -84,6 +84,11 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 			   }
 			sender.sendMessage(Particle.values()[this.currentParticleIdx].toString());
 		}
+		//TODO: Commands for
+		//	Changing team
+		//	Resetting flags/score/so forth
+		//	Cleanup all game objects/metainfo?
+		//	Defect to the other team? 
 		
 
 		//If the command isn't valid, return false so that help is displayed
@@ -143,4 +148,9 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 	//TODO:
 	//Recall/b command?
 	//Turn off advancements (maybe just hide them from the other team?)
+	//Sound effects on capture, pickup, etc
+	//	Also particle effects
+	//Compasses to find chunk with enemy flag
+	//	Compasses wobble to mask flag movement across chunk boundaries?
+	//Make flags visible through walls to owning team(?)
 }
