@@ -37,6 +37,7 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 	public static String TEAM_KEY = "CTF_TEAM";
 
 	public int currentParticleIdx = 0;
+	public Objective scoreObjective;
 
 	@Override
 	public void onEnable(){
@@ -65,13 +66,13 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				for(Objective o: board.getObjectives()){
 					o.unregister();
 				}
-				Objective objective = board.registerNewObjective("score", "dummy", "Score");
-				objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-				objective.setRenderType(RenderType.INTEGER);
+				this.scoreObjective = board.registerNewObjective("score", "dummy", "Score");
+				this.scoreObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
+				this.scoreObjective.setRenderType(RenderType.INTEGER);
 				Team teamA = board.registerNewTeam("Zigzags");
-				objective.getScore("Zigzags").setScore(0);
+				this.scoreObjective.getScore(teamA.getName()).setScore(0);
 				Team teamB = board.registerNewTeam("Curlicues");
-				objective.getScore("Curlicues").setScore(0);
+				this.scoreObjective.getScore(teamB.getName()).setScore(0);
 
 				Location playerLoc = player.getLocation();
 
@@ -133,11 +134,15 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				if(pLoc.getBlockX() == fLoc.getBlockX() &&
 				   pLoc.getBlockY() == fLoc.getBlockY() &&
 				   pLoc.getBlockZ() == fLoc.getBlockZ()){
-					String playerTeamId = getServer().getScoreboardManager().getMainScoreboard().getEntryTeam(player.getName()).getName();
+					Team playerTeam = getServer().getScoreboardManager().getMainScoreboard().getEntryTeam(player.getName());
+					String playerTeamId = playerTeam.getName();
 					String flagTeamId = flag.team.getName();
 					//Check if it's their own flag and if they have an enemy flag in their inventory
 					if(playerTeamId == flagTeamId && checkInventoryForEnemyFlag(player)){
-						player.sendRawMessage("You probably scored maybe!");
+						Score teamScore = this.scoreObjective.getScore(playerTeam.getName());
+						teamScore.setScore(teamScore.getScore() + 1);
+						//TODO: Respawn flag
+						//TODO: Check for win (maybe even emit an event? Only if I have a genuine use for it - YNGNI)
 					}
 				   }
 			}
