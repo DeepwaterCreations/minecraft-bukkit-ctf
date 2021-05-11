@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -72,8 +73,10 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 
 				//TODO: Move team creation to a function
 				Team teamA = board.registerNewTeam("Zigzags");
+				teamA.setColor(ChatColor.BLUE);
 				this.scoreObjective.getScore(teamA.getName()).setScore(0);
 				Team teamB = board.registerNewTeam("Curlicues");
+				teamB.setColor(ChatColor.RED);
 				this.scoreObjective.getScore(teamB.getName()).setScore(0);
 
 				Location playerLoc = player.getLocation();
