@@ -114,6 +114,11 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				this.currentParticleIdx = (this.currentParticleIdx + 1) % Particle.values().length;
 			   }
 			sender.sendMessage(Particle.values()[this.currentParticleIdx].toString());
+		} else if(cmd.getName().equalsIgnoreCase("respawnFlags")){
+			//TODO: Make this something players can vote on. If both teams agree, do it.
+			for(Flag flag : Flag.flagList){
+				flag.respawn();
+			}
 		}
 		//TODO: Commands for
 		//	Changing team
@@ -143,8 +148,17 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 					//Check if it's their own flag and if they have an enemy flag in their inventory
 					if(playerTeamId == flagTeamId && checkInventoryForEnemyFlag(player)){
 						Score teamScore = this.scoreObjective.getScore(playerTeam.getName());
-						teamScore.setScore(teamScore.getScore() + 1);
-						//TODO: Respawn flag
+						List<ItemStack> carriedFlags = Flag.getFlagItemsFromInventory(player.getInventory());
+						for(ItemStack carriedFlag : carriedFlags){
+							teamScore.setScore(teamScore.getScore() + 1);
+							NBTItem nbtitem = new NBTItem(carriedFlag);
+							String teamName = nbtitem.getString(MinecraftCTF.TEAM_KEY);
+							Flag.getFlagForTeamName(teamName).respawn();
+							//TODO: Be very careful and check that the player isn't somehow
+							//carrying the same flag they're also standing on?
+							//It sounds stupid, but I'm wary of server glitches.
+							//Then again, although it shouldn't award a point, it *should* respawn.
+						}
 						//TODO: Check for win (maybe even emit an event? Only if I have a genuine use for it - YNGNI)
 					}
 				   }
@@ -152,6 +166,7 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 		}
 	}
 
+	//TODO: Can I just get rid of this dumb function entirely?
 	private boolean checkInventoryForEnemyFlag(Player player){
 		Inventory inv = player.getInventory();
 		String playerTeamId = getServer().getScoreboardManager().getMainScoreboard().getEntryTeam(player.getName()).getName(); //TODO: Be a little careful and make sure we aren't checking players without teams

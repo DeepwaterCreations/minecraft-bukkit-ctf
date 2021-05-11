@@ -10,11 +10,13 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.EndPortalFrame;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -26,11 +28,17 @@ public class Flag implements Listener{
 
 	public static List<Flag> flagList = new ArrayList<Flag>();
 
+	public static String FLAG_KEY = "CTF_FLAG"; //for setting the flag flag
+							//TODO: It occurs to me that I can make the 
+							//	existing key "TEAM_FLAG_KEY" and just
+							//	assume anything that has it is a flag.
+
 	Block block;
 	Block spawnBlock;
 	Material bannerType;
 	ItemStack item;
 	Team team;
+	Location initLoc;
 
 	public Flag(MinecraftCTF plugin, Location initLoc, Material bannerType, Team team){
 
@@ -46,6 +54,7 @@ public class Flag implements Listener{
 
 		this.bannerType = bannerType;
 		this.team = team;
+		this.initLoc = initLoc;
 
 		//Make the flag item
 		ItemStack flagItem = new ItemStack(this.bannerType);
@@ -56,6 +65,7 @@ public class Flag implements Listener{
 		//or else two flags with the same name will count as the same flag.
 		NBTItem nbtitem = new NBTItem(flagItem);
 		nbtitem.setString(MinecraftCTF.TEAM_KEY, team.getName()); //TODO: Consider using a more specific key name
+		nbtitem.setBoolean(Flag.FLAG_KEY, true); //This just means "this is a flag".
 		flagItem = nbtitem.getItem();
 		this.item = flagItem;
 
@@ -68,6 +78,40 @@ public class Flag implements Listener{
 		} else {
 			return null;
 		}
+	}
+
+	public void respawn(){
+		World world = this.initLoc.getWorld();
+		if(this.block != null){
+			this.block.setType(Material.AIR);
+			//TODO: Check if spawn block still exists and if not, respawn it too
+		}
+		for(Player player : world.getPlayers()){
+			Inventory inv = player.getInventory();
+			for(ItemStack item : inv){
+				if(item != null && !(item.getType().equals(Material.AIR))){
+					NBTItem nbtitem = new NBTItem(item);
+					if(nbtitem.hasKey(MinecraftCTF.TEAM_KEY) && nbtitem.getString(MinecraftCTF.TEAM_KEY).equals(this.team.getName())){
+						item.setAmount(0);
+					}
+				}
+			}
+		}
+		for(Item itemEntity : world.getEntitiesByClass(Item.class)){
+			ItemStack item = itemEntity.getItemStack();
+			if(item != null && !(item.getType().equals(Material.AIR))){
+				NBTItem nbtitem = new NBTItem(item);
+				if(nbtitem.hasKey(MinecraftCTF.TEAM_KEY) && nbtitem.getString(MinecraftCTF.TEAM_KEY).equals(this.team.getName())){
+					item.setAmount(0);
+				}
+			}
+		}
+		this.block = this.spawnBlock.getRelative(0,1,0);
+		this.block.setType(this.bannerType);
+		//TODO: Refactor this biz.
+		//TODO: Respawn flags that are in chests and the like
+		//TODO: Separate despawn and spawn methods? I might want to spawn flags without
+		//	checking for despawn if, frex, one falls into lava.
 	}
 
 	@EventHandler
@@ -103,6 +147,29 @@ public class Flag implements Listener{
 			//Set the new block location
 			this.block = event.getBlockPlaced();
 		}
+	}
+
+	public static List<ItemStack> getFlagItemsFromInventory(Inventory inv){
+		List<ItemStack> flags = new ArrayList<ItemStack>();
+		for(ItemStack item : inv){
+			if(item != null){
+				NBTItem nbtitem = new NBTItem(item);
+				if(nbtitem.hasKey(Flag.FLAG_KEY)){
+					flags.add(item);
+				}		
+			}
+		}
+		return flags;
+	}
+
+	public static Flag getFlagForTeamName(String teamName){
+		for(Flag flag : Flag.flagList){
+			String name2 = flag.team.getName();
+			if(teamName.equals(name2)){
+				return flag;
+			}
+		}
+		return null;
 	}
 
 	//TODO:
