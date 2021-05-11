@@ -20,7 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import com.deepwatercreations.minecraftctf.MinecraftCTF;
-import com.deepwatercreations.minecraftctf.Team;
+import com.deepwatercreations.minecraftctf.CTFTeam;
 
 public class Flag implements Listener{
 
@@ -30,9 +30,10 @@ public class Flag implements Listener{
 	Block spawnBlock;
 	Material bannerType;
 	ItemStack item;
-	Team team;
+	CTFTeam team;
 
-	public Flag(MinecraftCTF plugin, Location initLoc, Material bannerType, Team team){
+	public Flag(MinecraftCTF plugin, Location initLoc, Material bannerType, CTFTeam team){
+
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		this.block = initLoc.getBlock();
 		this.block.setType(bannerType);
@@ -44,22 +45,19 @@ public class Flag implements Listener{
 		this.spawnBlock.setBlockData(blockData);
 
 		this.bannerType = bannerType;
+		this.team = team;
 
 		//Make the flag item
 		ItemStack flagItem = new ItemStack(this.bannerType);
 		ItemMeta meta = flagItem.getItemMeta();
-		meta.setDisplayName("Team " + "UNDEFINED" + " Flag");
+		meta.setDisplayName("Team " + this.team.name + " Flag");
 		flagItem.setItemMeta(meta);
 		//We need to use an external library to set NBT data
 		//or else two flags with the same name will count as the same flag.
 		NBTItem nbtitem = new NBTItem(flagItem);
-		nbtitem.setString(MinecraftCTF.TEAM_KEY, team.toString()); //TODO: I'd really rather have this be an int
-									   //TODO: Make sure there aren't problems caused by
-									   //	   using this same key for a non-flag
+		nbtitem.setInteger(MinecraftCTF.TEAM_KEY, team.getId()); //TODO: Consider using a more specific key name
 		flagItem = nbtitem.getItem();
-
 		this.item = flagItem;
-		this.team = team;
 
 		Flag.flagList.add(this);
 	}

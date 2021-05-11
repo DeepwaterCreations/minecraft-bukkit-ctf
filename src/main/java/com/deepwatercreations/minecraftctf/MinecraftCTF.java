@@ -24,7 +24,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.deepwatercreations.minecraftctf.Flag;
-import com.deepwatercreations.minecraftctf.Team;
+import com.deepwatercreations.minecraftctf.CTFTeam;
 import com.deepwatercreations.minecraftctf.Zone;
 
 public final class MinecraftCTF extends JavaPlugin implements Listener{
@@ -53,23 +53,25 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				int teamZoneRadius = 3;
 
 				Location teamABaseLoc = playerLoc.clone().add(10, 0, 0);
-				new Flag(this, teamABaseLoc, Material.BLUE_BANNER, Team.ZIGZAGS);
+				CTFTeam zigzags = new CTFTeam("Zigzags");
+				new Flag(this, teamABaseLoc, Material.BLUE_BANNER, zigzags);
 				new Zone(player.getWorld(), teamABaseLoc, teamZoneRadius).runTaskTimer(this, 0, 1);
 				//TODO: Pick an appropriate height to spawn both flags at given the ground levels
 				//	at the two locations.
 
+				CTFTeam curlicues = new CTFTeam("Curlicues");
 				Location teamBBaseLoc = playerLoc.clone().add(-10, 0, 0);
-				new Flag(this, teamBBaseLoc, Material.RED_BANNER, Team.CURLICUES);
+				new Flag(this, teamBBaseLoc, Material.RED_BANNER, curlicues);
 				new Zone(player.getWorld(), teamBBaseLoc, teamZoneRadius).runTaskTimer(this, 0, 1);
 
 				//Prompt players to register a team //TODO: Actually just randomize it for now, but they should get the option to choose
 				List<Player> players = player.getWorld().getPlayers();
 				Random rng = new Random();
-				Team[] teams = Team.values();
+				List<CTFTeam> teamList = CTFTeam.teamList;
 				for(Player p : players){
-					Team team = teams[rng.nextInt(teams.length)];
-					p.setMetadata(MinecraftCTF.TEAM_KEY, new FixedMetadataValue(this, team.toString()));
-					p.sendRawMessage("You've been assigned to team " + team.toString());
+					CTFTeam team = teamList.get(rng.nextInt(teamList.size()));
+					p.setMetadata(MinecraftCTF.TEAM_KEY, new FixedMetadataValue(this, team.name));
+					p.sendRawMessage("You've been assigned to team " + team.name);
 				}
 
 			}
@@ -106,10 +108,10 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				if(pLoc.getBlockX() == fLoc.getBlockX() &&
 				   pLoc.getBlockY() == fLoc.getBlockY() &&
 				   pLoc.getBlockZ() == fLoc.getBlockZ()){
-					String playerTeamString = player.getMetadata(MinecraftCTF.TEAM_KEY).get(0).asString();
-					String flagTeamString = flag.team.toString();
+					int playerTeamId = player.getMetadata(MinecraftCTF.TEAM_KEY).get(0).asInt();
+					int flagTeamId = flag.team.getId();
 					//Check if it's their own flag and if they have an enemy flag in their inventory
-					if(playerTeamString.equals(flagTeamString) && checkInventoryForEnemyFlag(player)){
+					if(playerTeamId == flagTeamId && checkInventoryForEnemyFlag(player)){
 						player.sendRawMessage("You probably scored maybe!");
 					}
 				   }
@@ -119,13 +121,13 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 
 	private boolean checkInventoryForEnemyFlag(Player player){
 		Inventory inv = player.getInventory();
-		String playerTeamString = player.getMetadata(MinecraftCTF.TEAM_KEY).get(0).asString(); //TODO: Be a little careful and make sure we aren't checking players without teams
+		int playerTeamId = player.getMetadata(MinecraftCTF.TEAM_KEY).get(0).asInt(); //TODO: Be a little careful and make sure we aren't checking players without teams
 		for(ItemStack item : inv){
 			if(item != null){
 				NBTItem nbtitem = new NBTItem(item);
 				//If I wanted to be safer, I could use a try/catch to make sure the value under the key
 				//	is actually a string, but I think that's overkill for planned usage
-				if(nbtitem.hasKey(MinecraftCTF.TEAM_KEY) && !nbtitem.getString(MinecraftCTF.TEAM_KEY).equals(playerTeamString)){
+				if(nbtitem.hasKey(MinecraftCTF.TEAM_KEY) && !nbtitem.getInteger(MinecraftCTF.TEAM_KEY).equals(playerTeamId)){
 					return true;
 				}
 			}
