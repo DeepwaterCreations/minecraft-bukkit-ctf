@@ -69,6 +69,8 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				this.scoreObjective = board.registerNewObjective("score", "dummy", "Score");
 				this.scoreObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
 				this.scoreObjective.setRenderType(RenderType.INTEGER);
+
+				//TODO: Move team creation to a function
 				Team teamA = board.registerNewTeam("Zigzags");
 				this.scoreObjective.getScore(teamA.getName()).setScore(0);
 				Team teamB = board.registerNewTeam("Curlicues");
@@ -176,6 +178,8 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 	//PlayerToggleSprintEvent ("")
 	
 	//TODO:
+	//Zones as barriers for first x minutes
+	//Flags behave appropriately in zones
 	//Recall/b command?
 	//Turn off advancements (maybe just hide them from the other team?)
 	//Sound effects on capture, pickup, etc
