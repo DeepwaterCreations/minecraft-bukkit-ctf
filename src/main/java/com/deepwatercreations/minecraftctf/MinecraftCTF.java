@@ -52,6 +52,8 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
 		if(cmd.getName().equalsIgnoreCase("init")){
+			//TODO: Let this possibly be a server command (needs to find a location without relying on player)
+			//TODO: Break this up into methods or something
 			if(sender instanceof Player){
 				Player player = (Player) sender;
 
@@ -177,4 +179,7 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 	//Compasses to find chunk with enemy flag
 	//	Compasses wobble to mask flag movement across chunk boundaries?
 	//Make flags visible through walls to owning team(?)
+	//Team Whisper (/tw) command to chat with an entire team
+	//	Make sure this doesn't already exist
+	//Track extra stuff like kills, deaths, captures, etc?
 }
