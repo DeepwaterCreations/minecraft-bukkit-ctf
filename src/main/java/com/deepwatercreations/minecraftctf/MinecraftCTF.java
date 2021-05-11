@@ -96,8 +96,6 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 					Team team = teamList.get(rng.nextInt(teamList.size()));
 					team.addEntry(p.getName());
 					p.sendRawMessage("You've been assigned to team " + team.getDisplayName());
-					//Let's also enable the scoreboard
-					p.setScoreboard(board);
 				}
 
 			}
