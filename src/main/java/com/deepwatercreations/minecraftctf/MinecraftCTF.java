@@ -22,9 +22,15 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.RenderType;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
-import com.deepwatercreations.minecraftctf.Flag;
 import com.deepwatercreations.minecraftctf.CTFTeam;
+import com.deepwatercreations.minecraftctf.Flag;
 import com.deepwatercreations.minecraftctf.Zone;
 
 public final class MinecraftCTF extends JavaPlugin implements Listener{
@@ -48,18 +54,32 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 		if(cmd.getName().equalsIgnoreCase("init")){
 			if(sender instanceof Player){
 				Player player = (Player) sender;
+
+				//Set up the scoreboard
+				Scoreboard board = getServer().getScoreboardManager().getMainScoreboard();
+				//First, clear any persistent data
+				for(Team t: board.getTeams()){
+					t.unregister();
+				}
+				for(Objective o: board.getObjectives()){
+					o.unregister();
+				}
+				Objective objective = board.registerNewObjective("score", "dummy", "Score");
+				objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+				objective.setRenderType(RenderType.INTEGER);
+				CTFTeam zigzags = new CTFTeam(board, objective, "Zigzags");
+				CTFTeam curlicues = new CTFTeam(board, objective, "Curlicues");
+
 				Location playerLoc = player.getLocation();
 
 				int teamZoneRadius = 3;
 
 				Location teamABaseLoc = playerLoc.clone().add(10, 0, 0);
-				CTFTeam zigzags = new CTFTeam("Zigzags");
 				new Flag(this, teamABaseLoc, Material.BLUE_BANNER, zigzags);
 				new Zone(player.getWorld(), teamABaseLoc, teamZoneRadius).runTaskTimer(this, 0, 1);
 				//TODO: Pick an appropriate height to spawn both flags at given the ground levels
 				//	at the two locations.
 
-				CTFTeam curlicues = new CTFTeam("Curlicues");
 				Location teamBBaseLoc = playerLoc.clone().add(-10, 0, 0);
 				new Flag(this, teamBBaseLoc, Material.RED_BANNER, curlicues);
 				new Zone(player.getWorld(), teamBBaseLoc, teamZoneRadius).runTaskTimer(this, 0, 1);
@@ -72,6 +92,8 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 					CTFTeam team = teamList.get(rng.nextInt(teamList.size()));
 					p.setMetadata(MinecraftCTF.TEAM_KEY, new FixedMetadataValue(this, team.name));
 					p.sendRawMessage("You've been assigned to team " + team.name);
+					//Let's also enable the scoreboard
+					p.setScoreboard(board);
 				}
 
 			}
