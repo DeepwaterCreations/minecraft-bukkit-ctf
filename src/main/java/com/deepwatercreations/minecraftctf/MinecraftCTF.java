@@ -93,7 +93,7 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				List<Team> teamList = new ArrayList<Team>(board.getTeams());
 				for(Player p : players){
 					Team team = teamList.get(rng.nextInt(teamList.size()));
-					p.setMetadata(MinecraftCTF.TEAM_KEY, new FixedMetadataValue(this, team.getName()));
+					team.addEntry(p.getName());
 					p.sendRawMessage("You've been assigned to team " + team.getDisplayName());
 					//Let's also enable the scoreboard
 					p.setScoreboard(board);
@@ -133,7 +133,7 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				if(pLoc.getBlockX() == fLoc.getBlockX() &&
 				   pLoc.getBlockY() == fLoc.getBlockY() &&
 				   pLoc.getBlockZ() == fLoc.getBlockZ()){
-					String playerTeamId = player.getMetadata(MinecraftCTF.TEAM_KEY).get(0).asString();
+					String playerTeamId = getServer().getScoreboardManager().getMainScoreboard().getEntryTeam(player.getName()).getName();
 					String flagTeamId = flag.team.getName();
 					//Check if it's their own flag and if they have an enemy flag in their inventory
 					if(playerTeamId == flagTeamId && checkInventoryForEnemyFlag(player)){
@@ -146,7 +146,7 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 
 	private boolean checkInventoryForEnemyFlag(Player player){
 		Inventory inv = player.getInventory();
-		String playerTeamId = player.getMetadata(MinecraftCTF.TEAM_KEY).get(0).asString(); //TODO: Be a little careful and make sure we aren't checking players without teams
+		String playerTeamId = getServer().getScoreboardManager().getMainScoreboard().getEntryTeam(player.getName()).getName(); //TODO: Be a little careful and make sure we aren't checking players without teams
 		for(ItemStack item : inv){
 			if(item != null){
 				NBTItem nbtitem = new NBTItem(item);
