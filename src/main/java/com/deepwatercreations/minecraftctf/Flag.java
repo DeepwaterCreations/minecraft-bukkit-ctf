@@ -18,9 +18,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.scoreboard.Team;
 
 import com.deepwatercreations.minecraftctf.MinecraftCTF;
-import com.deepwatercreations.minecraftctf.CTFTeam;
 
 public class Flag implements Listener{
 
@@ -30,9 +30,9 @@ public class Flag implements Listener{
 	Block spawnBlock;
 	Material bannerType;
 	ItemStack item;
-	CTFTeam team;
+	Team team;
 
-	public Flag(MinecraftCTF plugin, Location initLoc, Material bannerType, CTFTeam team){
+	public Flag(MinecraftCTF plugin, Location initLoc, Material bannerType, Team team){
 
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		this.block = initLoc.getBlock();
@@ -50,12 +50,12 @@ public class Flag implements Listener{
 		//Make the flag item
 		ItemStack flagItem = new ItemStack(this.bannerType);
 		ItemMeta meta = flagItem.getItemMeta();
-		meta.setDisplayName("Team " + this.team.name + " Flag");
+		meta.setDisplayName(this.team.getDisplayName());
 		flagItem.setItemMeta(meta);
 		//We need to use an external library to set NBT data
 		//or else two flags with the same name will count as the same flag.
 		NBTItem nbtitem = new NBTItem(flagItem);
-		nbtitem.setInteger(MinecraftCTF.TEAM_KEY, team.getId()); //TODO: Consider using a more specific key name
+		nbtitem.setString(MinecraftCTF.TEAM_KEY, team.getName()); //TODO: Consider using a more specific key name
 		flagItem = nbtitem.getItem();
 		this.item = flagItem;
 

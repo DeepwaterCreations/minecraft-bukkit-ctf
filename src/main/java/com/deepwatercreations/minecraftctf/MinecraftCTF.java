@@ -29,7 +29,6 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import com.deepwatercreations.minecraftctf.CTFTeam;
 import com.deepwatercreations.minecraftctf.Flag;
 import com.deepwatercreations.minecraftctf.Zone;
 
@@ -69,31 +68,33 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				Objective objective = board.registerNewObjective("score", "dummy", "Score");
 				objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 				objective.setRenderType(RenderType.INTEGER);
-				CTFTeam zigzags = new CTFTeam(board, objective, "Zigzags");
-				CTFTeam curlicues = new CTFTeam(board, objective, "Curlicues");
+				Team teamA = board.registerNewTeam("Zigzags");
+				objective.getScore("Zigzags").setScore(0);
+				Team teamB = board.registerNewTeam("Curlicues");
+				objective.getScore("Curlicues").setScore(0);
 
 				Location playerLoc = player.getLocation();
 
 				int teamZoneRadius = 3;
 
 				Location teamABaseLoc = playerLoc.clone().add(10, 0, 0);
-				new Flag(this, teamABaseLoc, Material.BLUE_BANNER, zigzags);
+				new Flag(this, teamABaseLoc, Material.BLUE_BANNER, teamA);
 				new Zone(player.getWorld(), teamABaseLoc, teamZoneRadius).runTaskTimer(this, 0, 1);
 				//TODO: Pick an appropriate height to spawn both flags at given the ground levels
 				//	at the two locations.
 
 				Location teamBBaseLoc = playerLoc.clone().add(-10, 0, 0);
-				new Flag(this, teamBBaseLoc, Material.RED_BANNER, curlicues);
+				new Flag(this, teamBBaseLoc, Material.RED_BANNER, teamB);
 				new Zone(player.getWorld(), teamBBaseLoc, teamZoneRadius).runTaskTimer(this, 0, 1);
 
 				//Prompt players to register a team //TODO: Actually just randomize it for now, but they should get the option to choose
 				List<Player> players = player.getWorld().getPlayers();
 				Random rng = new Random();
-				List<CTFTeam> teamList = CTFTeam.teamList;
+				List<Team> teamList = new ArrayList<Team>(board.getTeams());
 				for(Player p : players){
-					CTFTeam team = teamList.get(rng.nextInt(teamList.size()));
-					p.setMetadata(MinecraftCTF.TEAM_KEY, new FixedMetadataValue(this, team.name));
-					p.sendRawMessage("You've been assigned to team " + team.name);
+					Team team = teamList.get(rng.nextInt(teamList.size()));
+					p.setMetadata(MinecraftCTF.TEAM_KEY, new FixedMetadataValue(this, team.getName()));
+					p.sendRawMessage("You've been assigned to team " + team.getDisplayName());
 					//Let's also enable the scoreboard
 					p.setScoreboard(board);
 				}
@@ -132,8 +133,8 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				if(pLoc.getBlockX() == fLoc.getBlockX() &&
 				   pLoc.getBlockY() == fLoc.getBlockY() &&
 				   pLoc.getBlockZ() == fLoc.getBlockZ()){
-					int playerTeamId = player.getMetadata(MinecraftCTF.TEAM_KEY).get(0).asInt();
-					int flagTeamId = flag.team.getId();
+					String playerTeamId = player.getMetadata(MinecraftCTF.TEAM_KEY).get(0).asString();
+					String flagTeamId = flag.team.getName();
 					//Check if it's their own flag and if they have an enemy flag in their inventory
 					if(playerTeamId == flagTeamId && checkInventoryForEnemyFlag(player)){
 						player.sendRawMessage("You probably scored maybe!");
@@ -145,13 +146,13 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 
 	private boolean checkInventoryForEnemyFlag(Player player){
 		Inventory inv = player.getInventory();
-		int playerTeamId = player.getMetadata(MinecraftCTF.TEAM_KEY).get(0).asInt(); //TODO: Be a little careful and make sure we aren't checking players without teams
+		String playerTeamId = player.getMetadata(MinecraftCTF.TEAM_KEY).get(0).asString(); //TODO: Be a little careful and make sure we aren't checking players without teams
 		for(ItemStack item : inv){
 			if(item != null){
 				NBTItem nbtitem = new NBTItem(item);
 				//If I wanted to be safer, I could use a try/catch to make sure the value under the key
 				//	is actually a string, but I think that's overkill for planned usage
-				if(nbtitem.hasKey(MinecraftCTF.TEAM_KEY) && !nbtitem.getInteger(MinecraftCTF.TEAM_KEY).equals(playerTeamId)){
+				if(nbtitem.hasKey(MinecraftCTF.TEAM_KEY) && !nbtitem.getString(MinecraftCTF.TEAM_KEY).equals(playerTeamId)){
 					return true;
 				}
 			}
