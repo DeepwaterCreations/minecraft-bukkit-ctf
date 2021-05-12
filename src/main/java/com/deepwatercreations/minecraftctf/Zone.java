@@ -1,11 +1,16 @@
 package com.deepwatercreations.minecraftctf;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Zone extends BukkitRunnable{
+
+	public static List<Zone> zoneList = new ArrayList<Zone>();
 
 	public World world;
 	public Location center;
@@ -14,6 +19,7 @@ public class Zone extends BukkitRunnable{
 		this.world = world;
 		this.center = center;
 		this.radius = radius;
+		Zone.zoneList.add(this);
 	}
 
 	public void run(){
@@ -31,6 +37,15 @@ public class Zone extends BukkitRunnable{
 			loc.add(-((radius * 2) + 1), 1, 0);
 		}
 
+	}
+
+	public static void resetList(){
+		for(Zone z : Zone.zoneList){
+			if(!z.isCancelled()){
+				z.cancel();
+			}
+		}
+		Zone.zoneList = new ArrayList<Zone>();
 	}
 
 	//TODO: isInBounds()

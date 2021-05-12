@@ -57,9 +57,8 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 			//TODO: Break this up into methods or something
 			if(sender instanceof Player){
 				Player player = (Player) sender;
-
-				//Set up the scoreboard
 				Scoreboard board = getServer().getScoreboardManager().getMainScoreboard();
+				
 				//First, clear any persistent data
 				for(Team t: board.getTeams()){
 					t.unregister();
@@ -67,6 +66,10 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				for(Objective o: board.getObjectives()){
 					o.unregister();
 				}
+				Flag.resetList();
+				Zone.resetList();
+
+				//Set up the scoreboard
 				this.scoreObjective = board.registerNewObjective("score", "dummy", "Score");
 				this.scoreObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
 				this.scoreObjective.setRenderType(RenderType.INTEGER);

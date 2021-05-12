@@ -141,7 +141,7 @@ public class Flag implements Listener{
 
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event){
-		if(event.getItemInHand().equals(this.item)){
+		if(this.item != null && event.getItemInHand().equals(this.item)){
 			event.getPlayer().sendMessage("You placed a flag");
 
 			//Set the new block location
@@ -170,6 +170,24 @@ public class Flag implements Listener{
 			}
 		}
 		return null;
+	}
+
+	public static void resetList(){
+		for(Flag flag : Flag.flagList){
+			flag.respawn();
+			if(flag.item != null){
+				flag.item = null;
+			}
+			if(flag.block != null){
+				flag.block.setType(Material.AIR);
+				flag.block = null;
+			}
+			if(flag.spawnBlock != null){
+				flag.spawnBlock.setType(Material.AIR);
+				flag.spawnBlock = null;
+			}
+		}
+		Flag.flagList = new ArrayList<Flag>();
 	}
 
 	//TODO:
