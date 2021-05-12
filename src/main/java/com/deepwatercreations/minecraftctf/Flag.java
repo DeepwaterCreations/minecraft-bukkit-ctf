@@ -121,6 +121,8 @@ public class Flag implements Listener{
 		//	checking for despawn if, frex, one falls into lava.
 	}
 
+	/* BLOCK EVENTS */
+
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event){
 		//TODO: Make this work for if the block the banner is attached to gets broken also
