@@ -20,6 +20,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.inventory.Inventory;
@@ -185,6 +186,22 @@ public class Flag implements Listener{
 		}
 	}
 
+	//Respawns flag when it's destroyed
+	@EventHandler
+	public void onItemDamage(EntityDamageEvent event){
+		if(event.getEntityType().equals(EntityType.DROPPED_ITEM)){
+			   Item damagedItem = (Item) event.getEntity();
+			   ItemStack damagedItemStack = damagedItem.getItemStack();
+			   if(this.item != null &&
+			      damagedItemStack.isSimilar(this.item) && 
+			      Flag.sWhatThisItemStackIs(damagedItemStack) &&
+			      event.getFinalDamage() > 0 &&
+			      !event.isCancelled()){
+				   damagedItem.remove();
+				   this.respawn(); 
+			      }
+		}
+	}
 
 	public static boolean sWhatThisItemStackIs(ItemStack stack){
 		if(stack != null){
