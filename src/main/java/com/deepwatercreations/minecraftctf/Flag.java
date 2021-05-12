@@ -119,6 +119,8 @@ public class Flag implements Listener{
 		//TODO: Respawn flags that are in chests and the like
 		//TODO: Separate despawn and spawn methods? I might want to spawn flags without
 		//	checking for despawn if, frex, one falls into lava.
+		//TODO: Check to make sure the enemy flag isn't on the spawn block when respawning
+		//	(It'll replace the block, but when the flag is broken, both flags will drop.)
 	}
 
 	/* BLOCK EVENTS */
