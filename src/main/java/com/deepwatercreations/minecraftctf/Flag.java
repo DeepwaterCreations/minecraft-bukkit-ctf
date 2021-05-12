@@ -20,6 +20,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -170,6 +171,18 @@ public class Flag implements Listener{
 			}
 		}
 
+	}
+
+	//Stops flag item entities from despawning after 5 minutes
+	@EventHandler
+	public void onItemDespawn(ItemDespawnEvent event){
+		Item spawnItem = event.getEntity();
+		ItemStack spawnItemStack = spawnItem.getItemStack();
+		if(this.item != null &&
+		   spawnItemStack.isSimilar(this.item) && 
+		   Flag.sWhatThisItemStackIs(spawnItemStack)){
+			event.setCancelled(true); //Item exists for 5 more minutes
+		}
 	}
 
 
