@@ -75,8 +75,9 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				this.scoreObjective.setRenderType(RenderType.INTEGER);
 
 				Location playerLoc = player.getLocation();
-				Location teamABaseLoc = playerLoc.clone().add(10, 0, 0);
-				Location teamBBaseLoc = playerLoc.clone().add(-10, 0, 0);
+				Location centerLoc = new Location(player.getWorld(), (double)playerLoc.getBlockX(), (double)playerLoc.getBlockY(), (double)playerLoc.getBlockZ());
+				Location teamABaseLoc = centerLoc.clone().add(10, 0, 0);
+				Location teamBBaseLoc = centerLoc.clone().add(-10, 0, 0);
 				int teamZoneRadius = 3;
 				Team teamA = createTeam(board, "Zigzags", ChatColor.BLUE, teamABaseLoc, teamZoneRadius);
 				Team teamB = createTeam(board, "Curlicues", ChatColor.RED, teamBBaseLoc, teamZoneRadius);
@@ -178,7 +179,7 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 		team.setColor(color);
 		this.scoreObjective.getScore(team.getName()).setScore(0);
 		new Flag(this, teamBaseLoc, getBannerForColor(color), team);
-		new Zone(teamBaseLoc.getWorld(), teamBaseLoc, teamZoneRadius).runTaskTimer(this, 0, 20);
+		new Zone(teamBaseLoc, teamZoneRadius, Particle.REDSTONE).runTaskTimer(this, 0, 2);
 
 		return team;
 	}
