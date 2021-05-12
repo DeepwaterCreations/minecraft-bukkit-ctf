@@ -71,27 +71,14 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				this.scoreObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
 				this.scoreObjective.setRenderType(RenderType.INTEGER);
 
-				//TODO: Move team creation to a function
-				Team teamA = board.registerNewTeam("Zigzags");
-				teamA.setColor(ChatColor.BLUE);
-				this.scoreObjective.getScore(teamA.getName()).setScore(0);
-				Team teamB = board.registerNewTeam("Curlicues");
-				teamB.setColor(ChatColor.RED);
-				this.scoreObjective.getScore(teamB.getName()).setScore(0);
-
 				Location playerLoc = player.getLocation();
-
-				int teamZoneRadius = 3;
-
 				Location teamABaseLoc = playerLoc.clone().add(10, 0, 0);
-				new Flag(this, teamABaseLoc, Material.BLUE_BANNER, teamA);
-				new Zone(player.getWorld(), teamABaseLoc, teamZoneRadius).runTaskTimer(this, 0, 1);
+				Location teamBBaseLoc = playerLoc.clone().add(-10, 0, 0);
+				int teamZoneRadius = 3;
+				Team teamA = createTeam(board, "Zigzags", ChatColor.BLUE, teamABaseLoc, teamZoneRadius);
+				Team teamB = createTeam(board, "Curlicues", ChatColor.RED, teamBBaseLoc, teamZoneRadius);
 				//TODO: Pick an appropriate height to spawn both flags at given the ground levels
 				//	at the two locations.
-
-				Location teamBBaseLoc = playerLoc.clone().add(-10, 0, 0);
-				new Flag(this, teamBBaseLoc, Material.RED_BANNER, teamB);
-				new Zone(player.getWorld(), teamBBaseLoc, teamZoneRadius).runTaskTimer(this, 0, 1);
 
 				//Prompt players to register a team //TODO: Actually just randomize it for now, but they should get the option to choose
 				List<Player> players = player.getWorld().getPlayers();
@@ -181,6 +168,55 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 			}
 		}
 		return false;
+	}
+
+	public Team createTeam(Scoreboard board, String name, ChatColor color, Location teamBaseLoc, int teamZoneRadius){
+		Team team = board.registerNewTeam(name);
+		team.setColor(color);
+		this.scoreObjective.getScore(team.getName()).setScore(0);
+		new Flag(this, teamBaseLoc, getBannerForColor(color), team);
+		new Zone(teamBaseLoc.getWorld(), teamBaseLoc, teamZoneRadius).runTaskTimer(this, 0, 1);
+
+		return team;
+	}
+
+	public Material getBannerForColor(ChatColor color) throws IllegalArgumentException{
+		switch(color){
+			case AQUA:
+				return Material.LIGHT_BLUE_BANNER;
+			case BLACK:
+				return Material.BLACK_BANNER;
+			case BLUE:
+				return Material.BLUE_BANNER;
+			case DARK_AQUA:
+				return Material.CYAN_BANNER;
+			// case DARK_BLUE:
+			// 	return Material._BANNER;
+			case DARK_GRAY:
+				return Material.GRAY_BANNER;
+			case DARK_GREEN:
+				return Material.GREEN_BANNER;
+			case DARK_PURPLE:
+				return Material.PURPLE_BANNER;
+			// case DARK_RED:
+			// 	return Material.%_BANNER;
+			case GOLD:
+				return Material.ORANGE_BANNER;
+			case GRAY:
+				return Material.LIGHT_GRAY_BANNER;
+			case GREEN:
+				return Material.LIME_BANNER;
+			case LIGHT_PURPLE:
+				return Material.MAGENTA_BANNER;
+			case RED:
+				return Material.RED_BANNER;
+			case WHITE:
+				return Material.WHITE_BANNER;
+			case YELLOW:
+				return Material.YELLOW_BANNER;
+			default:
+				throw new IllegalArgumentException(String.format("No matching banner for color %s", color.toString()));
+		}
 	}
 
 	//EVENTS TO CATCH:
