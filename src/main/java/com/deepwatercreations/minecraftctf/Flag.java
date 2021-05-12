@@ -5,17 +5,22 @@ import de.tr7zw.changeme.nbtapi.NBTItem;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.UUID;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.EndPortalFrame;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -146,6 +151,34 @@ public class Flag implements Listener{
 
 			//Set the new block location
 			this.block = event.getBlockPlaced();
+		}
+	}
+
+	/* ITEM ENTITY EVENTS */
+
+	@EventHandler
+	public void onItemSpawn(ItemSpawnEvent event){
+		Item spawnItem = event.getEntity();
+		ItemStack spawnItemStack = spawnItem.getItemStack();
+		if(this.item != null &&
+		   spawnItemStack.isSimilar(this.item) &&
+		   Flag.sWhatThisItemStackIs(spawnItemStack)){
+			UUID throwerId = spawnItem.getThrower();
+			if(throwerId != null){
+				Entity thrower = spawnItem.getServer().getEntity(throwerId);
+				thrower.sendMessage("You chucked a flag down");
+			}
+		}
+
+	}
+
+
+	public static boolean sWhatThisItemStackIs(ItemStack stack){
+		if(stack != null){
+			NBTItem nbtitem = new NBTItem(stack);
+			return nbtitem.hasKey(Flag.FLAG_KEY);
+		} else {
+			return false;
 		}
 	}
 
