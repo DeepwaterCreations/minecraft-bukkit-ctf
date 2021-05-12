@@ -178,7 +178,7 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 		team.setColor(color);
 		this.scoreObjective.getScore(team.getName()).setScore(0);
 		new Flag(this, teamBaseLoc, getBannerForColor(color), team);
-		new Zone(teamBaseLoc.getWorld(), teamBaseLoc, teamZoneRadius).runTaskTimer(this, 0, 1);
+		new Zone(teamBaseLoc.getWorld(), teamBaseLoc, teamZoneRadius).runTaskTimer(this, 0, 20);
 
 		return team;
 	}
