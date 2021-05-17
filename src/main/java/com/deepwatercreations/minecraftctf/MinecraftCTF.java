@@ -143,7 +143,7 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 					} else{
 						String playerChoice = args[0];
 						for(Team team : scoreboard.getTeams()){
-							if(team.getName().startsWith(playerChoice)){
+							if(team.getName().toLowerCase().startsWith(playerChoice.toLowerCase())){
 								team.addEntry(player.getName());
 								getServer().broadcastMessage(String.format("%s has joined team %s", player.getName(), teamColoredText(team, team.getDisplayName())));
 								return true;
