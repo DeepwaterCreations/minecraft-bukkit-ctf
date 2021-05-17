@@ -111,6 +111,8 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				flag.respawn();
 			}
 			return true;
+		//TODO: Add team command handler
+		//	...which will let me have it autocomplete team names for one thing
 		} else if(cmd.getName().equalsIgnoreCase("teamlist")){
 			if(scoreboard == null){
 				sender.sendMessage("Game isn't initialized yet");
