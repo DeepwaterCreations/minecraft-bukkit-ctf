@@ -261,8 +261,13 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 	//TODO:
 	//Zones as barriers for first x minutes
 	//Flags behave appropriately in zones
-	//Recall/b command?
+	//Flag can't go through nether/end portals
+	//Sneaking, running, names, flag/carrier visibility
+	//Team spawnpoints
+	//Prisons
+	//	What happens when prison beds are broken?
 	//Turn off advancements (maybe just hide them from the other team?)
+	//Recall/b command?
 	//Sound effects on capture, pickup, etc
 	//	Also particle effects
 	//Compasses to find chunk with enemy flag
@@ -271,4 +276,5 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 	//Team Whisper (/tw) command to chat with an entire team
 	//	Make sure this doesn't already exist
 	//Track extra stuff like kills, deaths, captures, etc?
+	//Team votes
 }
