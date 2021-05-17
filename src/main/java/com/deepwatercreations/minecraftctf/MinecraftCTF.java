@@ -94,7 +94,7 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				for(Player p : players){
 					Team team = teamList.get(rng.nextInt(teamList.size()));
 					team.addEntry(p.getName());
-					p.sendRawMessage("You've been assigned to team " + team.getDisplayName());
+					p.sendRawMessage("You've been assigned to team " + teamColoredText(team, team.getDisplayName()));
 				}
 				return true;
 
@@ -124,7 +124,7 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 			} else {
 				sender.sendMessage("Teams:");
 				for(Team team : scoreboard.getTeams()){
-					String teamNameString = team.getDisplayName();
+					String teamNameString = teamColoredText(team, team.getDisplayName());
 					//If the display name doesn't match the regular name, we also want
 					//to show the player the regular name so they can correctly refer to
 					//the team in commands.
@@ -163,7 +163,7 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 					String flagTeamId = flag.team.getName();
 					//Check if it's their own flag and if they have an enemy flag in their inventory
 					if(playerTeamId == flagTeamId && checkInventoryForEnemyFlag(player)){
-						Score teamScore = this.scoreObjective.getScore(playerTeam.getName());
+						Score teamScore = this.scoreObjective.getScore(getTeamScoreName(playerTeam));
 						List<ItemStack> carriedFlags = Flag.getFlagItemsFromInventory(player.getInventory());
 						for(ItemStack carriedFlag : carriedFlags){
 							teamScore.setScore(teamScore.getScore() + 1);
@@ -202,7 +202,7 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 	public Team createTeam(String name, ChatColor color, Location teamBaseLoc, int teamZoneRadius){
 		Team team = scoreboard.registerNewTeam(name);
 		team.setColor(color);
-		this.scoreObjective.getScore(team.getName()).setScore(0);
+		this.scoreObjective.getScore(getTeamScoreName(team)).setScore(0);
 		new Flag(this, teamBaseLoc, getBannerForColor(color), team);
 		new Zone(teamBaseLoc, teamZoneRadius, Particle.REDSTONE).runTaskTimer(this, 0, 2);
 
@@ -254,6 +254,15 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 			ChatColor.WHITE, ChatColor.YELLOW};
 		return validTeamColors;
 	}
+
+	public String teamColoredText(Team team, String str){
+		return team.getColor() + str;
+	}
+
+	public String getTeamScoreName(Team team){
+		return team.getColor() + team.getName();
+	}
+
 	//EVENTS TO CATCH:
 	//ItemDespawnEvent
 	//EntityDropItemEvent
