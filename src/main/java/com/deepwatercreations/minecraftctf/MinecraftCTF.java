@@ -39,6 +39,7 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 
 	public int currentParticleIdx = 0;
 	public Objective scoreObjective;
+	public Scoreboard scoreboard;
 
 	@Override
 	public void onEnable(){
@@ -57,20 +58,20 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 			//TODO: Break this up into methods or something
 			if(sender instanceof Player){
 				Player player = (Player) sender;
-				Scoreboard board = getServer().getScoreboardManager().getMainScoreboard();
+				scoreboard = getServer().getScoreboardManager().getMainScoreboard();
 				
 				//First, clear any persistent data
-				for(Team t: board.getTeams()){
+				for(Team t: scoreboard.getTeams()){
 					t.unregister();
 				}
-				for(Objective o: board.getObjectives()){
+				for(Objective o: scoreboard.getObjectives()){
 					o.unregister();
 				}
 				Flag.resetList();
 				Zone.resetList();
 
 				//Set up the scoreboard
-				this.scoreObjective = board.registerNewObjective("score", "dummy", "Score");
+				this.scoreObjective = scoreboard.registerNewObjective("score", "dummy", "Score");
 				this.scoreObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
 				this.scoreObjective.setRenderType(RenderType.INTEGER);
 
@@ -79,15 +80,15 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				Location teamABaseLoc = centerLoc.clone().add(10, 0, 0);
 				Location teamBBaseLoc = centerLoc.clone().add(-10, 0, 0);
 				int teamZoneRadius = 3;
-				Team teamA = createTeam(board, "Zigzags", ChatColor.BLUE, teamABaseLoc, teamZoneRadius);
-				Team teamB = createTeam(board, "Curlicues", ChatColor.RED, teamBBaseLoc, teamZoneRadius);
+				Team teamA = createTeam("Zigzags", ChatColor.BLUE, teamABaseLoc, teamZoneRadius);
+				Team teamB = createTeam("Curlicues", ChatColor.RED, teamBBaseLoc, teamZoneRadius);
 				//TODO: Pick an appropriate height to spawn both flags at given the ground levels
 				//	at the two locations.
 
 				//Prompt players to register a team //TODO: Actually just randomize it for now, but they should get the option to choose
 				List<Player> players = player.getWorld().getPlayers();
 				Random rng = new Random();
-				List<Team> teamList = new ArrayList<Team>(board.getTeams());
+				List<Team> teamList = new ArrayList<Team>(scoreboard.getTeams());
 				for(Player p : players){
 					Team team = teamList.get(rng.nextInt(teamList.size()));
 					team.addEntry(p.getName());
@@ -177,8 +178,8 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 		return false;
 	}
 
-	public Team createTeam(Scoreboard board, String name, ChatColor color, Location teamBaseLoc, int teamZoneRadius){
-		Team team = board.registerNewTeam(name);
+	public Team createTeam(String name, ChatColor color, Location teamBaseLoc, int teamZoneRadius){
+		Team team = scoreboard.registerNewTeam(name);
 		team.setColor(color);
 		this.scoreObjective.getScore(team.getName()).setScore(0);
 		new Flag(this, teamBaseLoc, getBannerForColor(color), team);
