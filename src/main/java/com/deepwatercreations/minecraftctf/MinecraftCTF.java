@@ -93,6 +93,7 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 					team.addEntry(p.getName());
 					p.sendRawMessage("You've been assigned to team " + team.getDisplayName());
 				}
+				return true;
 
 			}
 			return true;
@@ -105,11 +106,13 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				this.currentParticleIdx = (this.currentParticleIdx + 1) % Particle.values().length;
 			   }
 			sender.sendMessage(Particle.values()[this.currentParticleIdx].toString());
+			return true;
 		} else if(cmd.getName().equalsIgnoreCase("respawnFlags")){
 			//TODO: Make this something players can vote on. If both teams agree, do it.
 			for(Flag flag : Flag.flagList){
 				flag.respawn();
 			}
+			return true;
 		}
 		//TODO: Commands for
 		//	Changing team
