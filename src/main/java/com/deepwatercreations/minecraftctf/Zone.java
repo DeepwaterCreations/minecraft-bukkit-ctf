@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -17,11 +18,12 @@ public class Zone extends BukkitRunnable{
 	public Location center;
 	public int radius;
 	public Particle particle;
+	public Color color;
 	public Random rng;
-	public Zone(Location center, int radius, Particle particle){
+	public Zone(Location center, int radius, Color color){
 		this.center = center;
 		this.radius = radius;
-		this.particle = particle;
+		this.color = color;
 		this.rng = new Random();
 		Zone.zoneList.add(this);
 	}
@@ -40,12 +42,12 @@ public class Zone extends BukkitRunnable{
 				loc = this.center.clone().add(x,relativeY,radius);
 				for(int i = 0; i < 3; i++){
 					randomloc = loc.clone().add(this.rng.nextFloat(), this.rng.nextFloat(), 1);
-					world.spawnParticle(Particle.REDSTONE, randomloc, 1, new Particle.DustOptions(Color.BLUE, particleSize));
+					world.spawnParticle(Particle.REDSTONE, randomloc, 1, new Particle.DustOptions(color, particleSize));
 				}
 				loc = this.center.clone().add(x,relativeY,-radius);
 				for(int i = 0; i < 3; i++){
 					randomloc = loc.clone().add(this.rng.nextFloat(), this.rng.nextFloat(), 0);
-					world.spawnParticle(Particle.REDSTONE, randomloc, 1, new Particle.DustOptions(Color.BLUE, particleSize));
+					world.spawnParticle(Particle.REDSTONE, randomloc, 1, new Particle.DustOptions(color, particleSize));
 				}
 			}
 			//Draw left and right sides
@@ -53,12 +55,12 @@ public class Zone extends BukkitRunnable{
 				loc = this.center.clone().add(radius,relativeY, z);
 				for(int i = 0; i < 3; i++){
 					randomloc = loc.clone().add(1, this.rng.nextFloat(), this.rng.nextFloat());
-					world.spawnParticle(Particle.REDSTONE, randomloc, 1, new Particle.DustOptions(Color.BLUE, particleSize));
+					world.spawnParticle(Particle.REDSTONE, randomloc, 1, new Particle.DustOptions(color, particleSize));
 				}
 				loc = this.center.clone().add(-radius,relativeY, z);
 				for(int i = 0; i < 3; i++){
 					randomloc = loc.clone().add(0, this.rng.nextFloat(), this.rng.nextFloat());
-					world.spawnParticle(Particle.REDSTONE, randomloc, 1, new Particle.DustOptions(Color.BLUE, particleSize));
+					world.spawnParticle(Particle.REDSTONE, randomloc, 1, new Particle.DustOptions(color, particleSize));
 				}
 			}
 		}
@@ -76,6 +78,46 @@ public class Zone extends BukkitRunnable{
 			}
 		}
 		Zone.zoneList = new ArrayList<Zone>();
+	}
+
+	public static Color getParticleColorFromChatColor(ChatColor color){
+		switch(color){
+			case AQUA:
+				return Color.AQUA;
+			case BLACK:
+				return Color.BLACK;
+			case BLUE:
+				return Color.BLUE;
+			case DARK_AQUA:
+				return Color.TEAL;
+			// case DARK_BLUE: //No banner for this color
+			// 	return Color.NAVY;
+			case DARK_GRAY:
+				return Color.GRAY;
+			case DARK_GREEN:
+				return Color.GREEN;
+			case DARK_PURPLE:
+				return Color.PURPLE;
+			// case DARK_RED: //No banner for this color
+			// 	return Color.MAROON;
+			case GOLD:
+				return Color.ORANGE;
+			case GRAY:
+				return Color.SILVER;
+			case GREEN:
+				return Color.LIME;
+			case LIGHT_PURPLE:
+				return Color.FUCHSIA;
+			case RED:
+				return Color.RED;
+			case WHITE:
+				return Color.WHITE;
+			case YELLOW:
+				return Color.YELLOW;
+			default:
+				throw new IllegalArgumentException(String.format("No matching particle color for chat color %s", color.toString()));
+		}
+
 	}
 
 	//TODO: isInBounds()
