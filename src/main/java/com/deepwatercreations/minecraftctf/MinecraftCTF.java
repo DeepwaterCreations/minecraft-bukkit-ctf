@@ -41,6 +41,8 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 	public Objective scoreObjective;
 	public Scoreboard scoreboard;
 
+	public int teamColorIdx = 0;
+
 	@Override
 	public void onEnable(){
 		getServer().getPluginManager().registerEvents(this, this);
@@ -80,8 +82,8 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				Location teamABaseLoc = centerLoc.clone().add(10, 0, 0);
 				Location teamBBaseLoc = centerLoc.clone().add(-10, 0, 0);
 				int teamZoneRadius = 3;
-				Team teamA = createTeam("Zigzags", ChatColor.BLUE, teamABaseLoc, teamZoneRadius);
-				Team teamB = createTeam("Curlicues", ChatColor.RED, teamBBaseLoc, teamZoneRadius);
+				Team teamA = createTeam("Zigzags", getValidTeamColors()[teamColorIdx++ % getValidTeamColors().length], teamABaseLoc, teamZoneRadius);
+				Team teamB = createTeam("Curlicues", getValidTeamColors()[teamColorIdx++ % getValidTeamColors().length], teamBBaseLoc, teamZoneRadius);
 				//TODO: Pick an appropriate height to spawn both flags at given the ground levels
 				//	at the two locations.
 
@@ -246,6 +248,12 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 		}
 	}
 
+	public ChatColor[] getValidTeamColors(){
+		ChatColor[] validTeamColors = {ChatColor.AQUA, ChatColor.BLACK, ChatColor.BLUE, ChatColor.DARK_AQUA, ChatColor.DARK_GRAY, ChatColor.DARK_GREEN,
+			ChatColor.DARK_PURPLE, ChatColor.GOLD, ChatColor.GRAY, ChatColor.GREEN, ChatColor.LIGHT_PURPLE, ChatColor.RED, 
+			ChatColor.WHITE, ChatColor.YELLOW};
+		return validTeamColors;
+	}
 	//EVENTS TO CATCH:
 	//ItemDespawnEvent
 	//EntityDropItemEvent
