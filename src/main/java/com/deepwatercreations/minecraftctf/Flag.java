@@ -3,7 +3,9 @@ package com.deepwatercreations.minecraftctf;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import java.util.UUID;
 
@@ -33,7 +35,7 @@ import com.deepwatercreations.minecraftctf.MinecraftCTF;
 
 public class Flag implements Listener{
 
-	public static List<Flag> flagList = new ArrayList<Flag>();
+	public static Map<String, Flag> flagsByTeamname = new HashMap<String, Flag>();
 
 	public static String FLAG_KEY = "CTF_FLAG"; //for setting the flag flag
 							//TODO: It occurs to me that I can make the 
@@ -76,7 +78,7 @@ public class Flag implements Listener{
 		flagItem = nbtitem.getItem();
 		this.item = flagItem;
 
-		Flag.flagList.add(this);
+		Flag.flagsByTeamname.put(team.getName(), this);
 	}
 
 	public Location getLocation(){
@@ -230,17 +232,11 @@ public class Flag implements Listener{
 	}
 
 	public static Flag getFlagForTeamName(String teamName){
-		for(Flag flag : Flag.flagList){
-			String name2 = flag.team.getName();
-			if(teamName.equals(name2)){
-				return flag;
-			}
-		}
-		return null;
+		return Flag.flagsByTeamname.get(teamName); //Returns null if no value for key
 	}
 
 	public static void resetList(){
-		for(Flag flag : Flag.flagList){
+		for(Flag flag : Flag.flagsByTeamname.values()){
 			flag.respawn();
 			if(flag.item != null){
 				flag.item = null;
@@ -254,7 +250,7 @@ public class Flag implements Listener{
 				flag.spawnBlock = null;
 			}
 		}
-		Flag.flagList = new ArrayList<Flag>();
+		Flag.flagsByTeamname = new HashMap<String, Flag>();
 	}
 
 	//TODO:

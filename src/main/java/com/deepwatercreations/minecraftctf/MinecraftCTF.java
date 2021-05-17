@@ -107,7 +107,7 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 			return true;
 		} else if(cmd.getName().equalsIgnoreCase("respawnFlags")){
 			//TODO: Make this something players can vote on. If both teams agree, do it.
-			for(Flag flag : Flag.flagList){
+			for(Flag flag : Flag.flagsByTeamname.values()){
 				flag.respawn();
 			}
 			return true;
@@ -170,35 +170,48 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event){
-		//Check if they've standing on a flag
 		Player player = event.getPlayer();
 		Location pLoc = player.getLocation();
-		for(Flag flag : Flag.flagList){
-			if(flag.getLocation() != null){
-				Location fLoc = flag.getLocation();
+
+		//Check if they've standing on their own flag
+		Team ownTeam = getServer().getScoreboardManager().getMainScoreboard().getEntryTeam(player.getName());
+		if(ownTeam != null){
+			Flag ownFlag = Flag.getFlagForTeamName(ownTeam.getName());
+			if(ownFlag != null && ownFlag.getLocation() != null){
+				Location fLoc = ownFlag.getLocation();
 				if(pLoc.getBlockX() == fLoc.getBlockX() &&
-				   pLoc.getBlockY() == fLoc.getBlockY() &&
-				   pLoc.getBlockZ() == fLoc.getBlockZ()){
-					Team playerTeam = getServer().getScoreboardManager().getMainScoreboard().getEntryTeam(player.getName());
-					String playerTeamId = playerTeam.getName();
-					String flagTeamId = flag.team.getName();
-					//Check if it's their own flag and if they have an enemy flag in their inventory
-					if(playerTeamId == flagTeamId && checkInventoryForEnemyFlag(player)){
-						Score teamScore = this.scoreObjective.getScore(getTeamScoreName(playerTeam));
+						pLoc.getBlockY() == fLoc.getBlockY() &&
+						pLoc.getBlockZ() == fLoc.getBlockZ()){
+					//They're standing on their own flag's block, so check if they can score.
+					if(checkInventoryForEnemyFlag(player)){
+						Score ownTeamScore = this.scoreObjective.getScore(getTeamScoreName(ownTeam));
 						List<ItemStack> carriedFlags = Flag.getFlagItemsFromInventory(player.getInventory());
+						//Score for each flag in their inventory. We assume if they're standing on their own
+						//team's flag block, that flag probably isn't also in their inventory, so every flag they're carrying
+						//is a flag they can score off of.
 						for(ItemStack carriedFlag : carriedFlags){
-							teamScore.setScore(teamScore.getScore() + 1);
+							//Increase the player's team's score
+							ownTeamScore.setScore(ownTeamScore.getScore() + 1);
+							//Figure out whose flag it is
 							NBTItem nbtitem = new NBTItem(carriedFlag);
-							String teamName = nbtitem.getString(MinecraftCTF.TEAM_KEY);
-							Flag.getFlagForTeamName(teamName).respawn();
-							//TODO: Be very careful and check that the player isn't somehow
-							//carrying the same flag they're also standing on?
-							//It sounds stupid, but I'm wary of server glitches.
-							//Then again, although it shouldn't award a point, it *should* respawn.
+							String flagTeamName = nbtitem.getString(MinecraftCTF.TEAM_KEY);
+							Flag cappedFlag = Flag.getFlagForTeamName(flagTeamName);
+							Team cappedFlagTeam = cappedFlag.team;
+							//Respawn it
+							cappedFlag.respawn();
+							//and spread the news!
+							getServer().broadcastMessage(String.format("%s captured team %s's flag!", player.getName(), teamColoredText(cappedFlagTeam, cappedFlagTeam.getDisplayName())));
+							getServer().broadcastMessage(teamColoredText(ownTeam, String.format("TEAM %s SCORES!", ownTeam.getDisplayName())));
+							//TODO: Sound effects, particle effects?
 						}
 						//TODO: Check for win (maybe even emit an event? Only if I have a genuine use for it - YNGNI)
+
 					}
-				   }
+				}
+			}
+		}
+	}
+
 			}
 		}
 	}
