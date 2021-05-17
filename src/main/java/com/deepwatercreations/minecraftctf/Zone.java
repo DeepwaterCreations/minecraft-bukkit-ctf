@@ -33,6 +33,7 @@ public class Zone extends BukkitRunnable{
 
 		float particleSize = 0.2f;
 
+		//TODO: Refactor this.
 		Location loc;
 		Location randomloc;
 		for(int y = 0; y < 256; y++){
