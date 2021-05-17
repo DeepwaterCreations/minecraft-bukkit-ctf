@@ -12,3 +12,6 @@ commands:
   respawnFlags:
     description: Respawn all flags in the game world
     usage: /respawnFlags
+  teamlist:
+    description: List the names of the teams
+    usage: /teamlist

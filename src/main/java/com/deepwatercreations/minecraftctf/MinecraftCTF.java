@@ -114,6 +114,25 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				flag.respawn();
 			}
 			return true;
+		} else if(cmd.getName().equalsIgnoreCase("teamlist")){
+			if(scoreboard == null){
+				sender.sendMessage("Game isn't initialized yet");
+			} else if (scoreboard.getTeams().size() == 0){
+				sender.sendMessage("There are no teams!");
+			} else {
+				sender.sendMessage("Teams:");
+				for(Team team : scoreboard.getTeams()){
+					String teamNameString = team.getDisplayName();
+					//If the display name doesn't match the regular name, we also want
+					//to show the player the regular name so they can correctly refer to
+					//the team in commands.
+					if(!team.getDisplayName().equals(team.getName())){
+						teamNameString += " (" + team.getName() + " )";
+					}
+					sender.sendMessage(teamNameString);
+				}
+			}
+			return true;
 		}
 		//TODO: Commands for
 		//	Changing team
