@@ -15,3 +15,6 @@ commands:
   teamlist:
     description: List the names of the teams
     usage: /teamlist
+  teamjoin:
+    description: Join a team
+    usage: /teamlist [team name]

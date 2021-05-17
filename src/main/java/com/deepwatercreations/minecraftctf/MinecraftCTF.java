@@ -91,11 +91,6 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				List<Player> players = player.getWorld().getPlayers();
 				Random rng = new Random();
 				List<Team> teamList = new ArrayList<Team>(scoreboard.getTeams());
-				for(Player p : players){
-					Team team = teamList.get(rng.nextInt(teamList.size()));
-					team.addEntry(p.getName());
-					p.sendRawMessage("You've been assigned to team " + teamColoredText(team, team.getDisplayName()));
-				}
 				return true;
 
 			}
@@ -135,6 +130,30 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				}
 			}
 			return true;
+		} else if(cmd.getName().equalsIgnoreCase("teamjoin")){
+			if(sender instanceof Player){
+				Player player = (Player) sender;
+				if(args.length > 0){
+					if(scoreboard == null){
+						sender.sendMessage("Game isn't initialized yet");
+					} else if (scoreboard.getTeams().size() == 0){
+						sender.sendMessage("There are no teams!");
+					} else{
+						String playerChoice = args[0];
+						for(Team team : scoreboard.getTeams()){
+							if(team.getName().startsWith(playerChoice)){
+								team.addEntry(player.getName());
+								getServer().broadcastMessage(String.format("%s has joined team %s", player.getName(), teamColoredText(team, team.getDisplayName())));
+								return true;
+							}
+						}
+					}
+				} else {
+					player.sendMessage("Usage: /teamjoin [team name]");
+				}
+				player.sendMessage("Type '/teamlist' to see the list of teams.");
+				return true;
+			}
 		}
 		//TODO: Commands for
 		//	Changing team
