@@ -1,0 +1,85 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/lair/ColdThings/minecraft-bukkit-ctf/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	//
+CTFCommandExecutor	src/main/java/com/deepwatercreations/minecraftctf/CTFCommandExecutor.java	/^	public CTFCommandExecutor(MinecraftCTF plugin){$/;"	m	class:CTFCommandExecutor
+CTFCommandExecutor	src/main/java/com/deepwatercreations/minecraftctf/CTFCommandExecutor.java	/^public class CTFCommandExecutor implements TabExecutor{$/;"	c
+CTFTeam	src/main/java/com/deepwatercreations/minecraftctf/CTFTeam.java	/^	public CTFTeam(String name, ChatColor color, MinecraftCTF plugin, Scoreboard scoreboard, Object/;"	m	class:CTFTeam
+CTFTeam	src/main/java/com/deepwatercreations/minecraftctf/CTFTeam.java	/^public class CTFTeam{$/;"	c
+FLAG_KEY	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^	public static String FLAG_KEY = "CTF_FLAG"; \/\/for setting the flag flag$/;"	f	class:Flag
+Flag	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^	public Flag(MinecraftCTF plugin, Location initLoc, ChatColor color, CTFTeam team){$/;"	m	class:Flag
+Flag	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^public class Flag implements Listener{$/;"	c
+MinecraftCTF	src/main/java/com/deepwatercreations/minecraftctf/MinecraftCTF.java	/^public final class MinecraftCTF extends JavaPlugin implements Listener{$/;"	c
+TEAM_KEY	src/main/java/com/deepwatercreations/minecraftctf/MinecraftCTF.java	/^	public static String TEAM_KEY = "CTF_TEAM";$/;"	f	class:MinecraftCTF
+Zone	src/main/java/com/deepwatercreations/minecraftctf/Zone.java	/^	public Zone(Location center, int radius, Color color){$/;"	m	class:Zone
+Zone	src/main/java/com/deepwatercreations/minecraftctf/Zone.java	/^public class Zone extends BukkitRunnable{$/;"	c
+addPlayer	src/main/java/com/deepwatercreations/minecraftctf/CTFTeam.java	/^	public void addPlayer(Player player){$/;"	m	class:CTFTeam
+bannerType	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^	Material bannerType;$/;"	f	class:Flag
+block	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^	Block block;$/;"	f	class:Flag
+center	src/main/java/com/deepwatercreations/minecraftctf/Zone.java	/^	public Location center;$/;"	f	class:Zone
+color	src/main/java/com/deepwatercreations/minecraftctf/CTFTeam.java	/^	public ChatColor color;$/;"	f	class:CTFTeam
+color	src/main/java/com/deepwatercreations/minecraftctf/Zone.java	/^	public Color color;$/;"	f	class:Zone
+com.deepwatercreations.minecraftctf	src/main/java/com/deepwatercreations/minecraftctf/CTFCommandExecutor.java	/^package com.deepwatercreations.minecraftctf;$/;"	p
+com.deepwatercreations.minecraftctf	src/main/java/com/deepwatercreations/minecraftctf/CTFTeam.java	/^package com.deepwatercreations.minecraftctf;$/;"	p
+com.deepwatercreations.minecraftctf	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^package com.deepwatercreations.minecraftctf;$/;"	p
+com.deepwatercreations.minecraftctf	src/main/java/com/deepwatercreations/minecraftctf/MinecraftCTF.java	/^package com.deepwatercreations.minecraftctf;$/;"	p
+com.deepwatercreations.minecraftctf	src/main/java/com/deepwatercreations/minecraftctf/Zone.java	/^package com.deepwatercreations.minecraftctf;$/;"	p
+currentParticleIdx	src/main/java/com/deepwatercreations/minecraftctf/MinecraftCTF.java	/^	public int currentParticleIdx = 0;$/;"	f	class:MinecraftCTF
+flag	src/main/java/com/deepwatercreations/minecraftctf/CTFTeam.java	/^	public Flag flag;$/;"	f	class:CTFTeam
+flagsByTeamname	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^	public static Map<String, Flag> flagsByTeamname = new HashMap<String, Flag>();$/;"	f	class:Flag
+getBannerForColor	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^	public static Material getBannerForColor(ChatColor color) throws IllegalArgumentException{$/;"	m	class:Flag
+getFlagForTeamName	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^	public static Flag getFlagForTeamName(String teamName){$/;"	m	class:Flag
+getFlagItemsFromInventory	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^	public static List<ItemStack> getFlagItemsFromInventory(Inventory inv){$/;"	m	class:Flag
+getLocation	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^	public Location getLocation(){$/;"	m	class:Flag
+getParticleColorFromChatColor	src/main/java/com/deepwatercreations/minecraftctf/Zone.java	/^	public static Color getParticleColorFromChatColor(ChatColor color){$/;"	m	class:Zone
+getTeamOfPlayer	src/main/java/com/deepwatercreations/minecraftctf/CTFTeam.java	/^	public static CTFTeam getTeamOfPlayer(Player player){$/;"	m	class:CTFTeam
+hasPlayer	src/main/java/com/deepwatercreations/minecraftctf/CTFTeam.java	/^	public boolean hasPlayer(Player player){$/;"	m	class:CTFTeam
+init	src/main/java/com/deepwatercreations/minecraftctf/MinecraftCTF.java	/^	public void init(Location centerLoc){$/;"	m	class:MinecraftCTF
+initLoc	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^	Location initLoc;$/;"	f	class:Flag
+isInBounds	src/main/java/com/deepwatercreations/minecraftctf/Zone.java	/^	public boolean isInBounds(Location loc){$/;"	m	class:Zone
+item	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^	ItemStack item;$/;"	f	class:Flag
+name	src/main/java/com/deepwatercreations/minecraftctf/CTFTeam.java	/^	public String name;$/;"	f	class:CTFTeam
+onBlockBreak	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^	public void onBlockBreak(BlockBreakEvent event){$/;"	m	class:Flag
+onBlockPlace	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^	public void onBlockPlace(BlockPlaceEvent event){$/;"	m	class:Flag
+onCommand	src/main/java/com/deepwatercreations/minecraftctf/CTFCommandExecutor.java	/^	 public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){$/;"	m	class:CTFCommandExecutor
+onCommand	src/main/java/com/deepwatercreations/minecraftctf/MinecraftCTF.java	/^	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){$/;"	m	class:MinecraftCTF
+onDisable	src/main/java/com/deepwatercreations/minecraftctf/MinecraftCTF.java	/^	public void onDisable(){$/;"	m	class:MinecraftCTF
+onEnable	src/main/java/com/deepwatercreations/minecraftctf/MinecraftCTF.java	/^	public void onEnable(){$/;"	m	class:MinecraftCTF
+onItemDamage	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^	public void onItemDamage(EntityDamageEvent event){$/;"	m	class:Flag
+onItemDespawn	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^	public void onItemDespawn(ItemDespawnEvent event){$/;"	m	class:Flag
+onItemSpawn	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^	public void onItemSpawn(ItemSpawnEvent event){$/;"	m	class:Flag
+onPlayerDeath	src/main/java/com/deepwatercreations/minecraftctf/MinecraftCTF.java	/^	public void onPlayerDeath(PlayerDeathEvent event){$/;"	m	class:MinecraftCTF
+onPlayerMove	src/main/java/com/deepwatercreations/minecraftctf/MinecraftCTF.java	/^	public void onPlayerMove(PlayerMoveEvent event){$/;"	m	class:MinecraftCTF
+onTabComplete	src/main/java/com/deepwatercreations/minecraftctf/CTFCommandExecutor.java	/^	 public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[/;"	m	class:CTFCommandExecutor
+particle	src/main/java/com/deepwatercreations/minecraftctf/Zone.java	/^	public Particle particle;$/;"	f	class:Zone
+plugin	src/main/java/com/deepwatercreations/minecraftctf/CTFCommandExecutor.java	/^	public MinecraftCTF plugin;$/;"	f	class:CTFCommandExecutor
+radius	src/main/java/com/deepwatercreations/minecraftctf/Zone.java	/^	public int radius;$/;"	f	class:Zone
+resetList	src/main/java/com/deepwatercreations/minecraftctf/CTFTeam.java	/^	public static void resetList(){$/;"	m	class:CTFTeam
+resetList	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^	public static void resetList(){$/;"	m	class:Flag
+resetList	src/main/java/com/deepwatercreations/minecraftctf/Zone.java	/^	public static void resetList(){$/;"	m	class:Zone
+respawn	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^	public void respawn(){$/;"	m	class:Flag
+rng	src/main/java/com/deepwatercreations/minecraftctf/Zone.java	/^	public Random rng;$/;"	f	class:Zone
+run	src/main/java/com/deepwatercreations/minecraftctf/Zone.java	/^	public void run(){$/;"	m	class:Zone
+sWhatThisItemStackIs	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^	public static boolean sWhatThisItemStackIs(ItemStack stack){$/;"	m	class:Flag
+scoreName	src/main/java/com/deepwatercreations/minecraftctf/CTFTeam.java	/^	public String scoreName;$/;"	f	class:CTFTeam
+scoreObjective	src/main/java/com/deepwatercreations/minecraftctf/MinecraftCTF.java	/^	public Objective scoreObjective;$/;"	f	class:MinecraftCTF
+scoreboard	src/main/java/com/deepwatercreations/minecraftctf/CTFTeam.java	/^	public Scoreboard scoreboard;$/;"	f	class:CTFTeam
+scoreboard	src/main/java/com/deepwatercreations/minecraftctf/MinecraftCTF.java	/^	public Scoreboard scoreboard;$/;"	f	class:MinecraftCTF
+scoreboardTeam	src/main/java/com/deepwatercreations/minecraftctf/CTFTeam.java	/^	public Team scoreboardTeam;$/;"	f	class:CTFTeam
+setParticle	src/main/java/com/deepwatercreations/minecraftctf/Zone.java	/^	public void setParticle(Particle particle){$/;"	m	class:Zone
+spawnBlock	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^	Block spawnBlock;$/;"	f	class:Flag
+team	src/main/java/com/deepwatercreations/minecraftctf/Flag.java	/^	CTFTeam team;$/;"	f	class:Flag
+teamBaseLoc	src/main/java/com/deepwatercreations/minecraftctf/CTFTeam.java	/^	public Location teamBaseLoc;$/;"	f	class:CTFTeam
+teamColorIdx	src/main/java/com/deepwatercreations/minecraftctf/MinecraftCTF.java	/^	public int teamColorIdx = 0;$/;"	f	class:MinecraftCTF
+teamColoredText	src/main/java/com/deepwatercreations/minecraftctf/CTFCommandExecutor.java	/^	 public static String teamColoredText(CTFTeam team, String str){$/;"	m	class:CTFCommandExecutor
+teamDict	src/main/java/com/deepwatercreations/minecraftctf/CTFTeam.java	/^	public static Map<String, CTFTeam> teamDict = new HashMap<String, CTFTeam>();$/;"	f	class:CTFTeam
+validTeamColors	src/main/java/com/deepwatercreations/minecraftctf/CTFTeam.java	/^	public static final ChatColor[] validTeamColors = {ChatColor.AQUA, ChatColor.BLACK, ChatColor.B/;"	f	class:CTFTeam
+zone	src/main/java/com/deepwatercreations/minecraftctf/CTFTeam.java	/^	public Zone zone;$/;"	f	class:CTFTeam
+zoneList	src/main/java/com/deepwatercreations/minecraftctf/Zone.java	/^	public static List<Zone> zoneList = new ArrayList<Zone>();$/;"	f	class:Zone
