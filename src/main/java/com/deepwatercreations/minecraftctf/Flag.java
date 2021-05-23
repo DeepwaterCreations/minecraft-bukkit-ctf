@@ -9,6 +9,7 @@ import java.util.Map;
 
 import java.util.UUID;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -29,7 +30,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.scoreboard.Team;
 
 import com.deepwatercreations.minecraftctf.MinecraftCTF;
 
@@ -46,13 +46,14 @@ public class Flag implements Listener{
 	Block spawnBlock;
 	Material bannerType;
 	ItemStack item;
-	Team team;
+	CTFTeam team;
 	Location initLoc;
 
-	public Flag(MinecraftCTF plugin, Location initLoc, Material bannerType, Team team){
+	public Flag(MinecraftCTF plugin, Location initLoc, ChatColor color, CTFTeam team){
 
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		this.block = initLoc.getBlock();
+		this.bannerType = Flag.getBannerForColor(color);
 		this.block.setType(bannerType);
 
 		this.spawnBlock = initLoc.clone().subtract(0,1,0).getBlock();
@@ -68,17 +69,17 @@ public class Flag implements Listener{
 		//Make the flag item
 		ItemStack flagItem = new ItemStack(this.bannerType);
 		ItemMeta meta = flagItem.getItemMeta();
-		meta.setDisplayName(this.team.getDisplayName());
+		meta.setDisplayName(this.team.name);
 		flagItem.setItemMeta(meta);
 		//We need to use an external library to set NBT data
 		//or else two flags with the same name will count as the same flag.
 		NBTItem nbtitem = new NBTItem(flagItem);
-		nbtitem.setString(MinecraftCTF.TEAM_KEY, team.getName()); //TODO: Consider using a more specific key name
+		nbtitem.setString(MinecraftCTF.TEAM_KEY, team.name); //TODO: Consider using a more specific key name
 		nbtitem.setBoolean(Flag.FLAG_KEY, true); //This just means "this is a flag".
 		flagItem = nbtitem.getItem();
 		this.item = flagItem;
 
-		Flag.flagsByTeamname.put(team.getName(), this);
+		Flag.flagsByTeamname.put(team.name, this);
 	}
 
 	public Location getLocation(){
@@ -100,7 +101,7 @@ public class Flag implements Listener{
 			for(ItemStack item : inv){
 				if(item != null && !(item.getType().equals(Material.AIR))){
 					NBTItem nbtitem = new NBTItem(item);
-					if(nbtitem.hasKey(MinecraftCTF.TEAM_KEY) && nbtitem.getString(MinecraftCTF.TEAM_KEY).equals(this.team.getName())){
+					if(nbtitem.hasKey(MinecraftCTF.TEAM_KEY) && nbtitem.getString(MinecraftCTF.TEAM_KEY).equals(this.team.name)){
 						item.setAmount(0);
 					}
 				}
@@ -110,7 +111,7 @@ public class Flag implements Listener{
 			ItemStack item = itemEntity.getItemStack();
 			if(item != null && !(item.getType().equals(Material.AIR))){
 				NBTItem nbtitem = new NBTItem(item);
-				if(nbtitem.hasKey(MinecraftCTF.TEAM_KEY) && nbtitem.getString(MinecraftCTF.TEAM_KEY).equals(this.team.getName())){
+				if(nbtitem.hasKey(MinecraftCTF.TEAM_KEY) && nbtitem.getString(MinecraftCTF.TEAM_KEY).equals(this.team.name)){
 					item.setAmount(0);
 				}
 			}
@@ -251,6 +252,45 @@ public class Flag implements Listener{
 			}
 		}
 		Flag.flagsByTeamname = new HashMap<String, Flag>();
+	}
+
+	public static Material getBannerForColor(ChatColor color) throws IllegalArgumentException{
+		switch(color){
+			case AQUA:
+				return Material.LIGHT_BLUE_BANNER;
+			case BLACK:
+				return Material.BLACK_BANNER;
+			case BLUE:
+				return Material.BLUE_BANNER;
+			case DARK_AQUA:
+				return Material.CYAN_BANNER;
+			// case DARK_BLUE:
+			// 	return Material._BANNER;
+			case DARK_GRAY:
+				return Material.GRAY_BANNER;
+			case DARK_GREEN:
+				return Material.GREEN_BANNER;
+			case DARK_PURPLE:
+				return Material.PURPLE_BANNER;
+			// case DARK_RED:
+			// 	return Material.%_BANNER;
+			case GOLD:
+				return Material.ORANGE_BANNER;
+			case GRAY:
+				return Material.LIGHT_GRAY_BANNER;
+			case GREEN:
+				return Material.LIME_BANNER;
+			case LIGHT_PURPLE:
+				return Material.MAGENTA_BANNER;
+			case RED:
+				return Material.RED_BANNER;
+			case WHITE:
+				return Material.WHITE_BANNER;
+			case YELLOW:
+				return Material.YELLOW_BANNER;
+			default:
+				throw new IllegalArgumentException(String.format("No matching banner for color %s", color.toString()));
+		}
 	}
 
 	//TODO:
