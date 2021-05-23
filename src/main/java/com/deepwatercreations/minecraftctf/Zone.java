@@ -68,6 +68,17 @@ public class Zone extends BukkitRunnable{
 
 	}
 
+	public boolean isInBounds(Location loc){
+		double xMin = this.center.getX() - this.radius;
+		double xMax = this.center.getX() + this.radius;
+		double zMin = this.center.getZ() - this.radius;
+		double zMax = this.center.getZ() + this.radius;
+		return (loc.getX() > xMin &&
+			loc.getX() < xMax &&
+			loc.getZ() > zMin &&
+			loc.getZ() < zMax);
+	}
+
 	public void setParticle(Particle particle){
 		this.particle = particle;
 	}

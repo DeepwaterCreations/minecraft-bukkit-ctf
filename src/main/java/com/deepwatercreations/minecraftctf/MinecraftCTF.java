@@ -133,28 +133,32 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				if(pLoc.getBlockX() == fLoc.getBlockX() &&
 				   pLoc.getBlockY() == fLoc.getBlockY() &&
 				   pLoc.getBlockZ() == fLoc.getBlockZ()){
-					//They're standing on their own flag's block, so check if they can score.
-					Score ownTeamScore = this.scoreObjective.getScore(ownTeam.scoreName);
-					List<ItemStack> carriedFlags = Flag.getFlagItemsFromInventory(player.getInventory());
-					//Score for each flag in their inventory. We assume if they're standing on their own
-					//team's flag block, that flag probably isn't also in their inventory, so every flag they're carrying
-					//is a flag they can score off of.
-					for(ItemStack carriedFlag : carriedFlags){
-						//Increase the player's team's score
-						ownTeamScore.setScore(ownTeamScore.getScore() + 1);
-						//Figure out whose flag it is
-						NBTItem nbtitem = new NBTItem(carriedFlag);
-						String flagTeamName = nbtitem.getString(MinecraftCTF.TEAM_KEY);
-						Flag cappedFlag = Flag.getFlagForTeamName(flagTeamName);
-						CTFTeam cappedFlagTeam = cappedFlag.team;
-						//Respawn it
-						cappedFlag.respawn();
-						//and spread the news!
-						getServer().broadcastMessage(String.format("%s captured team %s's flag!", player.getName(), CTFCommandExecutor.teamColoredText(cappedFlagTeam, cappedFlagTeam.name)));
-						getServer().broadcastMessage(CTFCommandExecutor.teamColoredText(ownTeam, String.format("TEAM %s SCORES!", ownTeam.name)));
-						//TODO: Sound effects, particle effects?
+					if(!ownTeam.zone.isInBounds(pLoc)) {
+						player.sendMessage("Can't score outside your team zone"); 
+					} else {
+						//They're standing on their own flag's block and in their own zone, so check if they can score.
+						Score ownTeamScore = this.scoreObjective.getScore(ownTeam.scoreName);
+						List<ItemStack> carriedFlags = Flag.getFlagItemsFromInventory(player.getInventory());
+						//Score for each flag in their inventory. We assume if they're standing on their own
+						//team's flag block, that flag probably isn't also in their inventory, so every flag they're carrying
+						//is a flag they can score off of.
+						for(ItemStack carriedFlag : carriedFlags){
+							//Increase the player's team's score
+							ownTeamScore.setScore(ownTeamScore.getScore() + 1);
+							//Figure out whose flag it is
+							NBTItem nbtitem = new NBTItem(carriedFlag);
+							String flagTeamName = nbtitem.getString(MinecraftCTF.TEAM_KEY);
+							Flag cappedFlag = Flag.getFlagForTeamName(flagTeamName);
+							CTFTeam cappedFlagTeam = cappedFlag.team;
+							//Respawn it
+							cappedFlag.respawn();
+							//and spread the news!
+							getServer().broadcastMessage(String.format("%s captured team %s's flag!", player.getName(), CTFCommandExecutor.teamColoredText(cappedFlagTeam, cappedFlagTeam.name)));
+							getServer().broadcastMessage(CTFCommandExecutor.teamColoredText(ownTeam, String.format("TEAM %s SCORES!", ownTeam.name)));
+							//TODO: Sound effects, particle effects?
+						}
+						//TODO: Check for win (maybe even emit an event? Only if I have a genuine use for it - YNGNI)
 					}
-					//TODO: Check for win (maybe even emit an event? Only if I have a genuine use for it - YNGNI)
 				}
 			} 
 		} 
