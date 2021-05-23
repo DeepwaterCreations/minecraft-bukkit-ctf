@@ -167,6 +167,11 @@ public class Flag implements Listener{
 
 	@EventHandler
 	public void onItemSpawn(ItemSpawnEvent event){
+		//This doesn't apparently fire when the flag is "dropped" because
+		//the player went out of bounds.
+		//Probably that's fixable by deliberately spawning an event in Zone
+		//or something.
+		//TODO: Look at PlayerDropEvent
 		Item spawnItem = event.getEntity();
 		ItemStack spawnItemStack = spawnItem.getItemStack();
 		if(this.item != null &&
@@ -175,7 +180,7 @@ public class Flag implements Listener{
 			UUID throwerId = spawnItem.getThrower();
 			if(throwerId != null){
 				Entity thrower = spawnItem.getServer().getEntity(throwerId);
-				thrower.sendMessage("You chucked a flag down");
+				// thrower.getServer().broadcastMessage(String.format("%s dropped %s flag", thrower.getName(), team.scoreName));
 			}
 		}
 
