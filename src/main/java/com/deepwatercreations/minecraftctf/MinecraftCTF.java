@@ -31,9 +31,9 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import com.deepwatercreations.minecraftctf.Flag;
-import com.deepwatercreations.minecraftctf.Zone;
 import com.deepwatercreations.minecraftctf.CTFCommandExecutor;
+import com.deepwatercreations.minecraftctf.Flag;
+import com.deepwatercreations.minecraftctf.zones.*;
 
 public final class MinecraftCTF extends JavaPlugin implements Listener{
 
@@ -117,6 +117,10 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 
 		//Prompt players to register a team
 		getServer().broadcastMessage("Choose a team by typing '/teamjoin [team name]' into chat.");
+
+		//Make a game zone
+		GameBoundsZone gameBounds = new GameBoundsZone(centerLoc, teamZoneRadius + 10, this);
+		((Zone) gameBounds).runTaskTimerAsynchronously(this, 0, 5);
 	}
 
 	@EventHandler

@@ -1,4 +1,4 @@
-package com.deepwatercreations.minecraftctf;
+package com.deepwatercreations.minecraftctf.zones;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +17,25 @@ public class Zone extends BukkitRunnable{
 
 	public Location center;
 	public int radius;
+
+	double xMin;
+	double xMax;
+	double zMin;
+	double zMax;
+	
 	public Particle particle;
 	public Color color;
 	public Random rng;
+
 	public Zone(Location center, int radius, Color color){
 		this.center = center;
 		this.radius = radius;
+
+		this.xMin = this.center.getX() - this.radius;
+		this.xMax = this.center.getX() + this.radius;
+		this.zMin = this.center.getZ() - this.radius;
+		this.zMax = this.center.getZ() + this.radius;
+
 		this.color = color;
 		this.rng = new Random();
 		Zone.zoneList.add(this);
@@ -41,42 +54,58 @@ public class Zone extends BukkitRunnable{
 			//Draw top and bottom sides
 			for(int x = -radius; x <= radius; x++){
 				loc = this.center.clone().add(x,relativeY,radius);
-				for(int i = 0; i < 3; i++){
-					randomloc = loc.clone().add(this.rng.nextFloat(), this.rng.nextFloat(), 1);
-					world.spawnParticle(Particle.REDSTONE, randomloc, 1, new Particle.DustOptions(color, particleSize));
-				}
+				world.spawnParticle(Particle.REDSTONE, loc, 1, new Particle.DustOptions(color, particleSize));
+				// for(int i = 0; i < 3; i++){
+				// 	randomloc = loc.clone().add(this.rng.nextFloat(), this.rng.nextFloat(), 1);
+				// 	world.spawnParticle(Particle.REDSTONE, randomloc, 1, new Particle.DustOptions(color, particleSize));
+				// }
 				loc = this.center.clone().add(x,relativeY,-radius);
-				for(int i = 0; i < 3; i++){
-					randomloc = loc.clone().add(this.rng.nextFloat(), this.rng.nextFloat(), 0);
-					world.spawnParticle(Particle.REDSTONE, randomloc, 1, new Particle.DustOptions(color, particleSize));
-				}
+				world.spawnParticle(Particle.REDSTONE, loc, 1, new Particle.DustOptions(color, particleSize));
+				// for(int i = 0; i < 3; i++){
+				// 	randomloc = loc.clone().add(this.rng.nextFloat(), this.rng.nextFloat(), 0);
+				// 	world.spawnParticle(Particle.REDSTONE, randomloc, 1, new Particle.DustOptions(color, particleSize));
+				// }
 			}
 			//Draw left and right sides
 			for(int z = -radius; z <= radius; z++){
 				loc = this.center.clone().add(radius,relativeY, z);
-				for(int i = 0; i < 3; i++){
-					randomloc = loc.clone().add(1, this.rng.nextFloat(), this.rng.nextFloat());
-					world.spawnParticle(Particle.REDSTONE, randomloc, 1, new Particle.DustOptions(color, particleSize));
-				}
+				world.spawnParticle(Particle.REDSTONE, loc, 1, new Particle.DustOptions(color, particleSize));
+				// for(int i = 0; i < 3; i++){
+				// 	randomloc = loc.clone().add(1, this.rng.nextFloat(), this.rng.nextFloat());
+				// 	world.spawnParticle(Particle.REDSTONE, randomloc, 1, new Particle.DustOptions(color, particleSize));
+				// }
 				loc = this.center.clone().add(-radius,relativeY, z);
-				for(int i = 0; i < 3; i++){
-					randomloc = loc.clone().add(0, this.rng.nextFloat(), this.rng.nextFloat());
-					world.spawnParticle(Particle.REDSTONE, randomloc, 1, new Particle.DustOptions(color, particleSize));
-				}
+				world.spawnParticle(Particle.REDSTONE, loc, 1, new Particle.DustOptions(color, particleSize));
+				// for(int i = 0; i < 3; i++){
+				// 	randomloc = loc.clone().add(0, this.rng.nextFloat(), this.rng.nextFloat());
+				// 	world.spawnParticle(Particle.REDSTONE, randomloc, 1, new Particle.DustOptions(color, particleSize));
+				// }
 			}
 		}
 
 	}
 
 	public boolean isInBounds(Location loc){
-		double xMin = this.center.getX() - this.radius;
-		double xMax = this.center.getX() + this.radius;
-		double zMin = this.center.getZ() - this.radius;
-		double zMax = this.center.getZ() + this.radius;
-		return (loc.getX() > xMin &&
-			loc.getX() < xMax &&
-			loc.getZ() > zMin &&
-			loc.getZ() < zMax);
+		return (loc.getX() > this.xMin &&
+			loc.getX() < this.xMax &&
+			loc.getZ() > this.zMin &&
+			loc.getZ() < this.zMax);
+	}
+
+	public Location getClosestInBounds(Location loc){
+		loc = loc.clone();
+
+		if(loc.getX() > this.xMax){
+			loc.setX(Math.floor(this.xMax));
+		} else if(loc.getX() < this.xMin){
+			loc.setX(Math.ceil(this.xMin));
+		}
+		if(loc.getZ() > this.zMax){
+			loc.setZ(Math.floor(this.zMax));
+		} else if (loc.getZ() < this.zMin){
+			loc.setZ(Math.ceil(this.zMin));
+		}
+		return loc;		
 	}
 
 	public void setParticle(Particle particle){
@@ -110,8 +139,8 @@ public class Zone extends BukkitRunnable{
 				return Color.GREEN;
 			case DARK_PURPLE:
 				return Color.PURPLE;
-			// case DARK_RED: //No banner for this color
-			// 	return Color.MAROON;
+			case DARK_RED: //No banner for this color
+				return Color.MAROON;
 			case GOLD:
 				return Color.ORANGE;
 			case GRAY:
@@ -132,7 +161,6 @@ public class Zone extends BukkitRunnable{
 
 	}
 
-	//TODO: isInBounds()
-	//TODO: Draw only the outline
 	//TODO: Team bounds vs play area bounds
+	//TODO: Handle ender pearling across the boundary.
 }
