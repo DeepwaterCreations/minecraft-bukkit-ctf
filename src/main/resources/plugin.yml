@@ -6,9 +6,6 @@ commands:
   init:
     description: Initialize the game
     usage: /init
-  ne:
-    description: Change to the next particle effect
-    usage: /ne
   respawnFlags:
     description: Respawn all flags in the game world
     usage: /respawnFlags
