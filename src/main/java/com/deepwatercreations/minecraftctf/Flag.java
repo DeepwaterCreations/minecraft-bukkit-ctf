@@ -132,10 +132,7 @@ public class Flag implements Listener{
 	public void onBlockBreak(BlockBreakEvent event){
 		//TODO: Make this work for if the block the banner is attached to gets broken also
 		Block broken = event.getBlock();
-		if(this.getLocation() != null &&
-		   broken.getX() == this.block.getX() &&
-		   broken.getY() == this.block.getY() &&
-		   broken.getZ() == this.block.getZ()){
+		if(this.getLocation() != null && this.block.equals(broken)){
 			event.getPlayer().sendMessage("You broke a flag");
 			
 			//Stop this event from dropping a natural flag
