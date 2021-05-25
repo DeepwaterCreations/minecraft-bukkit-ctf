@@ -59,16 +59,24 @@ public class CTFCommandExecutor implements TabExecutor{
 						sender.sendMessage("Game isn't initialized yet");
 					} else if (CTFTeam.teamDict.isEmpty() || plugin.scoreboard.getTeams().size() == 0){
 						sender.sendMessage("There are no teams!");
-					//TODO: Check if they're already on another team
+					} else if (CTFTeam.getTeamOfPlayer(player) != null){
+						sender.sendMessage(String.format("You are already on team %s", CTFTeam.getTeamOfPlayer(player).scoreName));
 					} else{
 						String playerChoice = args[0];
+						CTFTeam chosenTeam = null;
 						for(String teamname : CTFTeam.teamDict.keySet()){
 							if(teamname.toLowerCase().startsWith(playerChoice.toLowerCase())){
-								CTFTeam team = CTFTeam.teamDict.get(teamname);
-								team.addPlayer(player);
-								plugin.getServer().broadcastMessage(String.format("%s has joined team %s", player.getName(), team.scoreName));
-								return true;
+								chosenTeam = CTFTeam.teamDict.get(teamname);
+								chosenTeam.addPlayer(player);
+								plugin.getServer().broadcastMessage(String.format("%s has joined team %s", player.getName(), chosenTeam.scoreName));
+								break;
 							}
+						}
+						if(chosenTeam != null){
+							player.teleport(chosenTeam.teamBaseLoc);
+							return true;
+						} else {
+							player.sendMessage(String.format("Couldn't find a team called '%s'", playerChoice));
 						}
 					}
 				} else {
@@ -79,7 +87,7 @@ public class CTFCommandExecutor implements TabExecutor{
 			}
 		}
 		//TODO: Commands for
-		//	Changing team
+		//	Leaving/switching team during game setup
 		//	Resetting flags/score/so forth
 		//	Cleanup all game objects/metainfo?
 		//	Defect to the other team? 
