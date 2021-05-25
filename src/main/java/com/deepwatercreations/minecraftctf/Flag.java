@@ -52,16 +52,16 @@ public class Flag implements Listener{
 	public Flag(MinecraftCTF plugin, Location initLoc, ChatColor color, CTFTeam team){
 
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
-		this.block = initLoc.getBlock();
-		this.bannerType = Flag.getBannerForColor(color);
-		this.block.setType(bannerType);
 
-		this.spawnBlock = initLoc.clone().subtract(0,1,0).getBlock();
+		this.spawnBlock = initLoc.clone().getBlock();
 		this.spawnBlock.setType(Material.END_PORTAL_FRAME);
 		EndPortalFrame blockData = (EndPortalFrame) Material.END_PORTAL_FRAME.createBlockData();
 		blockData.setEye(true);
 		this.spawnBlock.setBlockData(blockData);
 
+		this.block = initLoc.clone().add(0,1,0).getBlock();
+		this.bannerType = Flag.getBannerForColor(color);
+		this.block.setType(bannerType);
 		this.bannerType = bannerType;
 		this.team = team;
 		this.initLoc = initLoc;

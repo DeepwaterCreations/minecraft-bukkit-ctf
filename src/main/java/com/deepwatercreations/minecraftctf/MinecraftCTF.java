@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -30,6 +31,7 @@ import org.bukkit.scoreboard.RenderType;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import org.bukkit.util.Vector;
 
 import com.deepwatercreations.minecraftctf.CTFCommandExecutor;
 import com.deepwatercreations.minecraftctf.Flag;
@@ -67,7 +69,8 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 				Player player = (Player) sender;
 				Location playerLoc = player.getLocation();
 				Location centerLoc = new Location(player.getWorld(), (double)playerLoc.getBlockX(), (double)playerLoc.getBlockY(), (double)playerLoc.getBlockZ());
-				init(centerLoc);
+				Vector axis = player.getFacing().getDirection();
+				init(centerLoc, axis, (4 * 16));
 			} else {
 				//TODO: Get center location from arguments...?
 				//	Or pick it if none are provided.
@@ -77,7 +80,7 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 		return false;
 	}
 
-	public void init(Location centerLoc){
+	public void init(Location centerLoc, Vector axis, int zonelength){
 		this.scoreboard = getServer().getScoreboardManager().getMainScoreboard();
 
 		//First, clear any persistent data
@@ -95,9 +98,16 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 		this.scoreObjective.setDisplaySlot(DisplaySlot.SIDEBAR);
 		this.scoreObjective.setRenderType(RenderType.INTEGER);
 
-		Location teamABaseLoc = centerLoc.clone().add(10, 0, 0);
-		Location teamBBaseLoc = centerLoc.clone().add(-10, 0, 0);
-		int teamZoneRadius = 3;
+		//pick/setup a game field
+		// findGameFieldLocation(centerLoc.getWorld(), 0, 0);
+
+		int margin = 1;
+		int distToTeamZoneCenter = zonelength + zonelength + (zonelength/2);
+		int teamZoneRadius = (zonelength/2);
+		Vector centerToBase = axis.clone().multiply(distToTeamZoneCenter);
+		World world = centerLoc.getWorld();
+		Location teamABaseLoc = world.getHighestBlockAt(centerLoc.clone().add(centerToBase)).getLocation().add(0,1,0);
+		Location teamBBaseLoc = world.getHighestBlockAt(centerLoc.clone().subtract(centerToBase)).getLocation().add(0,1,0);
 		CTFTeam teamA = new CTFTeam("Zigzags", 
 					    CTFTeam.validTeamColors[teamColorIdx++ % CTFTeam.validTeamColors.length], 
 					    this,
@@ -119,7 +129,8 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 		getServer().broadcastMessage("Choose a team by typing '/teamjoin [team name]' into chat.");
 
 		//Make a game zone
-		GameBoundsZone gameBounds = new GameBoundsZone(centerLoc, teamZoneRadius + 10, this);
+		//TODO: Rectangular instead of square?
+		GameBoundsZone gameBounds = new GameBoundsZone(centerLoc, (zonelength + zonelength + zonelength + margin), this);
 		((Zone) gameBounds).runTaskTimerAsynchronously(this, 0, 5);
 	}
 
