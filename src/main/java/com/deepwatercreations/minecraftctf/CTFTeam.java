@@ -17,9 +17,15 @@ import com.deepwatercreations.minecraftctf.zones.Zone;
 
 public class CTFTeam{
 
-	public static final ChatColor[] validTeamColors = {ChatColor.AQUA, ChatColor.BLACK, ChatColor.BLUE, ChatColor.DARK_AQUA, ChatColor.DARK_GRAY, ChatColor.DARK_GREEN,
-			ChatColor.DARK_PURPLE, ChatColor.GOLD, ChatColor.GRAY, ChatColor.GREEN, ChatColor.LIGHT_PURPLE, ChatColor.RED, 
-			ChatColor.WHITE, ChatColor.YELLOW};
+	public static final ChatColor[] validTeamColors = {
+		ChatColor.RED, ChatColor.BLUE, 
+		ChatColor.WHITE, ChatColor.BLACK, 
+		ChatColor.YELLOW, ChatColor.DARK_GRAY,
+	       	ChatColor.AQUA, ChatColor.DARK_PURPLE,
+	       	ChatColor.GOLD, ChatColor.GRAY, 
+		ChatColor.DARK_AQUA, ChatColor.GREEN, 
+		ChatColor.LIGHT_PURPLE, ChatColor.DARK_GREEN 	
+	};
 
 	public static Map<String, CTFTeam> teamDict = new HashMap<String, CTFTeam>();
 
