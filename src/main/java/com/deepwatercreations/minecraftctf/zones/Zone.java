@@ -9,9 +9,9 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.plugin.Plugin;
 
-public class Zone extends BukkitRunnable{
+public class Zone{
 
 	public static List<Zone> zoneList = new ArrayList<Zone>();
 
@@ -22,12 +22,17 @@ public class Zone extends BukkitRunnable{
 	double xMax;
 	double zMin;
 	double zMax;
+
+	ParticleWall northEdge;
+	ParticleWall southEdge;
+	ParticleWall westEdge;
+	ParticleWall eastEdge;
 	
-	public Particle particle;
+	// public Particle particle;
 	public Color color;
 	public Random rng;
 
-	public Zone(Location center, int radius, Color color){
+	public Zone(Plugin plugin, Location center, int radius, Color color){
 		this.center = center;
 		this.radius = radius;
 
@@ -37,52 +42,26 @@ public class Zone extends BukkitRunnable{
 		this.zMax = this.center.getZ() + this.radius;
 
 		this.color = color;
+		World world = this.center.getWorld();
+		this.northEdge = new ParticleWall(plugin,
+						  new Location(world, this.xMin, 0, this.zMin), 
+						  new Location(world, this.xMax, 0, this.zMin), 
+						  this.color);
+		this.southEdge = new ParticleWall(plugin,
+						  new Location(world, this.xMin, 0, this.zMax), 
+						  new Location(world, this.xMax, 0, this.zMax), 
+						  this.color);
+		this.westEdge = new ParticleWall(plugin,
+						 new Location(world, this.xMin, 0, this.zMin), 
+						 new Location(world, this.xMin, 0, this.zMax), 
+						 this.color);
+		this.eastEdge = new ParticleWall(plugin,
+						 new Location(world, this.xMax, 0, this.zMin), 
+						 new Location(world, this.xMax, 0, this.zMax), 
+						 this.color);
+
 		this.rng = new Random();
 		Zone.zoneList.add(this);
-	}
-
-	public void run(){
-		World world = this.center.getWorld();
-
-		float particleSize = 0.2f;
-
-		//TODO: Refactor this.
-		Location loc;
-		Location randomloc;
-		for(int y = 0; y < 256; y++){
-			double relativeY = (-this.center.getY()) + y;
-			//Draw top and bottom sides
-			for(int x = -radius; x <= radius; x++){
-				loc = this.center.clone().add(x,relativeY,radius);
-				world.spawnParticle(Particle.REDSTONE, loc, 1, new Particle.DustOptions(color, particleSize));
-				// for(int i = 0; i < 3; i++){
-				// 	randomloc = loc.clone().add(this.rng.nextFloat(), this.rng.nextFloat(), 1);
-				// 	world.spawnParticle(Particle.REDSTONE, randomloc, 1, new Particle.DustOptions(color, particleSize));
-				// }
-				loc = this.center.clone().add(x,relativeY,-radius);
-				world.spawnParticle(Particle.REDSTONE, loc, 1, new Particle.DustOptions(color, particleSize));
-				// for(int i = 0; i < 3; i++){
-				// 	randomloc = loc.clone().add(this.rng.nextFloat(), this.rng.nextFloat(), 0);
-				// 	world.spawnParticle(Particle.REDSTONE, randomloc, 1, new Particle.DustOptions(color, particleSize));
-				// }
-			}
-			//Draw left and right sides
-			for(int z = -radius; z <= radius; z++){
-				loc = this.center.clone().add(radius,relativeY, z);
-				world.spawnParticle(Particle.REDSTONE, loc, 1, new Particle.DustOptions(color, particleSize));
-				// for(int i = 0; i < 3; i++){
-				// 	randomloc = loc.clone().add(1, this.rng.nextFloat(), this.rng.nextFloat());
-				// 	world.spawnParticle(Particle.REDSTONE, randomloc, 1, new Particle.DustOptions(color, particleSize));
-				// }
-				loc = this.center.clone().add(-radius,relativeY, z);
-				world.spawnParticle(Particle.REDSTONE, loc, 1, new Particle.DustOptions(color, particleSize));
-				// for(int i = 0; i < 3; i++){
-				// 	randomloc = loc.clone().add(0, this.rng.nextFloat(), this.rng.nextFloat());
-				// 	world.spawnParticle(Particle.REDSTONE, randomloc, 1, new Particle.DustOptions(color, particleSize));
-				// }
-			}
-		}
-
 	}
 
 	public boolean isInBounds(Location loc){
@@ -108,16 +87,7 @@ public class Zone extends BukkitRunnable{
 		return loc;		
 	}
 
-	public void setParticle(Particle particle){
-		this.particle = particle;
-	}
-
 	public static void resetList(){
-		for(Zone z : Zone.zoneList){
-			if(!z.isCancelled()){
-				z.cancel();
-			}
-		}
 		Zone.zoneList = new ArrayList<Zone>();
 	}
 

@@ -131,7 +131,6 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 		//Make a game zone
 		//TODO: Rectangular instead of square?
 		GameBoundsZone gameBounds = new GameBoundsZone(centerLoc, (zonelength + zonelength + zonelength + margin), this);
-		((Zone) gameBounds).runTaskTimerAsynchronously(this, 0, 5);
 	}
 
 	@EventHandler

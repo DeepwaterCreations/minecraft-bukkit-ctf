@@ -60,8 +60,7 @@ public class CTFTeam{
 		scoreObjective.getScore(this.scoreName).setScore(0);
 
 		this.teamBaseLoc = teamBaseLoc;
-		this.zone = new Zone(teamBaseLoc, teamZoneRadius, Zone.getParticleColorFromChatColor(color));
-		this.zone.runTaskTimerAsynchronously(plugin, 0, 5);
+		this.zone = new Zone(plugin, teamBaseLoc, teamZoneRadius, Zone.getParticleColorFromChatColor(color));
 		this.flag = new Flag(plugin, teamBaseLoc, color, this);
 
 		CTFTeam.teamDict.put(name, this);

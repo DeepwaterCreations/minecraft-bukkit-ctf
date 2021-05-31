@@ -18,13 +18,8 @@ import com.deepwatercreations.minecraftctf.zones.Zone;
 public class GameBoundsZone extends Zone implements Listener{
 
 	public GameBoundsZone(Location center, int radius, MinecraftCTF plugin){
-		super(center, radius, Color.MAROON);
+		super(plugin, center, radius, Color.MAROON);
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
-	}
-
-	@Override
-	public void run(){
-		super.run();
 	}
 
 	@EventHandler
