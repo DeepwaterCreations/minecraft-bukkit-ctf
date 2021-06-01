@@ -185,12 +185,23 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 		if(player.getBedSpawnLocation() == null){
 			CTFTeam team = CTFTeam.getTeamOfPlayer(player);
 			Flag flag = Flag.getFlagForTeamName(team.name);
-			//TODO: Check the two blocks that are spawn targets and turn them into air if they're not
-			//	a flag.
-			if(flag.spawnBlock != null){
-				player.setBedSpawnLocation(flag.spawnBlock.getLocation().add(0,1,0), true);
+			Block spawnBlock = flag.spawnBlock;
+			Location spawnLoc;
+			if(spawnBlock != null){
+				spawnLoc = spawnBlock.getLocation().clone().add(0,1,0);
 			} else {
-				player.setBedSpawnLocation(flag.initLoc, true);
+				spawnLoc = flag.initLoc.clone().add(0,1,0);
+			}
+			player.setBedSpawnLocation(spawnLoc, true);
+			//Clear any clutter blocks out of the way so the player can actually spawn
+			for(int y = 0; y < 2; y++){
+				if(!spawnLoc.getBlock().isPassable()){
+					spawnLoc.getBlock().setType(Material.AIR);
+				}
+				spawnLoc.add(0,1,0);
+			}
+		}
+	}
 			}
 		}
 	}
@@ -214,7 +225,6 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 	//Flag can't go through nether/end portals
 	//Flag spawn can be moved (but can't leave team zone)
 	//Sneaking, running, names, flag/carrier visibility
-	//Team spawnpoints
 	//Prisons
 	//	What happens when prison beds are broken?
 	//Turn off advancements (maybe just hide them from the other team?)
