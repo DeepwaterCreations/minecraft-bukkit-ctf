@@ -73,6 +73,9 @@ public class CTFCommandExecutor implements TabExecutor{
 							}
 						}
 						if(chosenTeam != null){
+							//TODO: Wait until teams are finalized to do this
+							player.setBedSpawnLocation(null);
+							player.getInventory().clear();
 							player.teleport(chosenTeam.teamBaseLoc);
 							return true;
 						} else {
