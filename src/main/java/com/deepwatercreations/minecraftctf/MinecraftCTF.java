@@ -184,6 +184,9 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 		//Spawn them at their base if they don't have a different spawn set
 		if(player.getBedSpawnLocation() == null){
 			CTFTeam team = CTFTeam.getTeamOfPlayer(player);
+			if(team == null){
+				return;
+			}
 			Flag flag = Flag.getFlagForTeamName(team.name);
 			Block spawnBlock = flag.spawnBlock;
 			Location spawnLoc;
