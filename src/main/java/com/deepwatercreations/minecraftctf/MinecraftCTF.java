@@ -210,7 +210,6 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 	}
 
 	//EVENTS TO CATCH:
-	//ItemDespawnEvent
 	//EntityDropItemEvent
 	//EntityPickupItemEvent
 	//EntityPlaceEvent
@@ -220,6 +219,8 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 	//PlayerRespawnEvent (to spawn at team base or prison)
 	//PlayerToggleSneakEvent (for flag visibility complexity?)	
 	//PlayerToggleSprintEvent ("")
+	//BlockBurnEvent
+	//BlockExplodeEvent
 	
 	//TODO:
 	//Zones as barriers for first x minutes
@@ -227,6 +228,7 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 	//Flag can't go through nether/end portals
 	//Flag spawn can be moved (but can't leave team zone)
 	//Sneaking, running, names, flag/carrier visibility
+	//Prevent structure generation? Or force it in the game's center?
 	//Prisons
 	//	What happens when prison beds are broken?
 	//Turn off advancements (maybe just hide them from the other team?)
@@ -240,4 +242,5 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 	//	Make sure this doesn't already exist
 	//Track extra stuff like kills, deaths, captures, etc?
 	//Team votes
+	//What if teams could pick their own zones?
 }
