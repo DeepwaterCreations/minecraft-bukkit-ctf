@@ -219,7 +219,6 @@ public final class MinecraftCTF extends JavaPlugin implements Listener{
 	//PlayerToggleSprintEvent ("")
 	
 	//TODO:
-	//Flag items dropped from the flag's attached block being broken count as real flag items
 	//Zones as barriers for first x minutes
 	//Flags behave appropriately in zones
 	//Flag can't go through nether/end portals

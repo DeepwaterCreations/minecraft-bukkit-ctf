@@ -14,6 +14,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.EndPortalFrame;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -44,6 +47,7 @@ public class Flag implements Listener{
 
 	Block block;
 	Block spawnBlock;
+	Block attachedBlock;
 	Material bannerType;
 	ItemStack item;
 	CTFTeam team;
@@ -62,6 +66,9 @@ public class Flag implements Listener{
 		this.block = initLoc.clone().add(0,1,0).getBlock();
 		this.bannerType = Flag.getBannerForColor(color);
 		this.block.setType(bannerType);
+
+		this.attachedBlock = spawnBlock;
+
 		this.bannerType = bannerType;
 		this.team = team;
 		this.initLoc = initLoc;
@@ -118,6 +125,7 @@ public class Flag implements Listener{
 		}
 		this.block = this.spawnBlock.getRelative(0,1,0);
 		this.block.setType(this.bannerType);
+		this.attachedBlock = this.spawnBlock;
 		//TODO: Refactor this biz.
 		//TODO: Respawn flags that are in chests and the like
 		//TODO: Separate despawn and spawn methods? I might want to spawn flags without
@@ -130,11 +138,11 @@ public class Flag implements Listener{
 
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event){
-		//TODO: Make this work for if the block the banner is attached to gets broken also
-		Block broken = event.getBlock();
-		if(this.getLocation() != null && this.block.equals(broken)){
+		if(this.getLocation() != null &&
+		   (event.getBlock().equals(this.block) || 
+		    event.getBlock().equals(this.attachedBlock))){
 			event.getPlayer().sendMessage("You broke a flag");
-			
+
 			//Stop this event from dropping a natural flag
 			event.setDropItems(false);
 
@@ -144,19 +152,31 @@ public class Flag implements Listener{
 			Player player = event.getPlayer();
 			World world = player.getWorld();
 			world.dropItem(player.getLocation(), this.item);
-			
+
 			//Set the block to null, since the flag's not there anymore:
 			this.block = null;
-		}
+			this.attachedBlock = null;
+		    }
 	}
 
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event){
-		if(this.item != null && event.getItemInHand().equals(this.item)){
+		if(this.item != null && !event.isCancelled() && event.getItemInHand().equals(this.item)){
 			event.getPlayer().sendMessage("You placed a flag");
 
 			//Set the new block location
 			this.block = event.getBlockPlaced();
+
+			if(this.block.getBlockData() instanceof Directional){
+				//It's a wall banner, so the attached block is dependent on 
+				//which way it's facing.
+				BlockFace facing = ((Directional) this.block.getBlockData()).getFacing();
+				this.attachedBlock = this.block.getRelative(facing.getOppositeFace());
+
+			} else {
+				//It's a regular banner, so the attached block is right under it.
+				this.attachedBlock = this.block.getRelative(0, -1, 0);
+			}
 		}
 	}
 
